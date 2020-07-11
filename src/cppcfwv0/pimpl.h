@@ -17,7 +17,7 @@
 // The factory to produce pimpl classes
 #pragma once
 
-namespace ccwall {
+namespace cppcfwv0 {
 
   template <class T>
   class PImpl {
