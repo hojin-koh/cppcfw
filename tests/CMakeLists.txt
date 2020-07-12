@@ -28,9 +28,9 @@ add_executable(test-program ${srcs})
 
 ## Link the original library
 add_subdirectory(.. orig)
-target_link_libraries(test-program PRIVATE cppcfw)
+target_link_libraries(test-program PRIVATE cppcfwv0)
 
-## Link the necessary catch2
+## Link catch2
 include(FetchContent)
 FetchContent_Declare(Catch2 GIT_TAG v3.0.0-preview3 GIT_REPOSITORY https://github.com/catchorg/Catch2.git)
 FetchContent_MakeAvailable(Catch2)
