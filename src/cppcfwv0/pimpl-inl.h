@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-// A straightforward PImpl wrapper
+// Implementation of the straightforward pimpl wrapper
 #pragma once
+#include <cppcfwv0/pimpl.h>
 
 namespace cppcfwv0 {
 
-  template <class T>
-  class PImpl {
-  private:
-    // Yes, horrible raw pointer in order not to include smart pointer headers here
-    T* m_ptr {nullptr};
-  public:
-    template <typename... Args> PImpl(Args&& ...);
-    ~PImpl();
-
-    // Overloadings to get the actual underlying implementation object
-    T* operator->();
-    const T* operator->() const;
-    T& operator*();
-    const T& operator*() const;
-  }; // end class PImpl
 
 }
 
