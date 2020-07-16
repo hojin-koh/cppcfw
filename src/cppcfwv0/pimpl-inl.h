@@ -18,8 +18,35 @@
 #pragma once
 #include <cppcfwv0/pimpl.h>
 
+#include <utility> // for forward
+
 namespace cppcfwv0 {
 
+  // == Ctor/Dtor ==
+
+  template <class T>
+  template <typename... Args>
+  PImpl<T>::PImpl(Args&&... args) : m_ptr{new T{std::forward<Args>(args)...}} {}
+
+  template <class T>
+  PImpl<T>::~PImpl() {
+    if (m_ptr) delete m_ptr;
+  }
+
+
+  // == Underlying ==
+
+  template <class T>
+  T* PImpl<T>::operator->() { return m_ptr; }
+
+  template <class T>
+  const T* PImpl<T>::operator->() const { return m_ptr; }
+
+  template <class T>
+  T& PImpl<T>::operator*() { return *m_ptr; }
+
+  template <class T>
+  const T& PImpl<T>::operator*() const { return *m_ptr; }
 
 }
 
