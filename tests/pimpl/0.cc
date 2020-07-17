@@ -2,6 +2,8 @@
 #include "0.sub.h"
 #include <catch2/catch_test_macros.hpp>
 
+namespace test_pimpl {
+
 SCENARIO("PImpl object without parameters", "[pimpl]") {
 
   GIVEN("A class with zero-param pimpl") {
@@ -10,4 +12,7 @@ SCENARIO("PImpl object without parameters", "[pimpl]") {
       REQUIRE(obj.run() == 179);
     }
   }
+
 } // end 0 parameter scenario
+
+}
