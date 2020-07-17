@@ -12,6 +12,7 @@ namespace test_pimpl {
     Test0();
     ~Test0();
     int run();
+    int run() const;
   };
 
 }

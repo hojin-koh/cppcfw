@@ -7,8 +7,8 @@ namespace test_pimpl {
   // Implement the inner class here
   class Test0::Impl {
   public:
-    int a {179};
-    int run() {
+    int a {500};
+    int run() const {
       return a;
     }
   };
@@ -18,6 +18,10 @@ namespace test_pimpl {
   Test0::Test0() = default;
 
   int Test0::run() {
+    return pimpl->run();
+  }
+
+  int Test0::run() const {
     return pimpl->run();
   }
 
