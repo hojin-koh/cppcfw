@@ -33,6 +33,35 @@ namespace cppcfwv0 {
     if (m_ptr) delete m_ptr;
   }
 
+  // == Move and Copy ==
+
+  template <class T>
+  PImpl<T>::PImpl(PImpl<T>&& rhs) noexcept : m_ptr{rhs.m_ptr} {
+    rhs.m_ptr = nullptr;
+  }
+
+  template <class T>
+  PImpl<T>& PImpl<T>::operator=(PImpl<T>&& rhs) noexcept {
+    if (m_ptr != rhs.m_ptr) {
+      if (m_ptr) delete m_ptr;
+      m_ptr = rhs.m_ptr;
+      rhs.m_ptr = nullptr;
+    }
+
+    return *this;
+  }
+
+  template <class T>
+  PImpl<T>::PImpl(const PImpl<T>& rhs) : m_ptr{new T{*rhs.m_ptr}} {}
+
+  template <class T>
+  PImpl<T>& PImpl<T>::operator=(const PImpl<T>& rhs) {
+    if (m_ptr != rhs.m_ptr) {
+      if (m_ptr) delete m_ptr;
+      m_ptr = new T{*rhs.m_ptr};
+    }
+    return *this;
+  }
 
   // == Underlying ==
 

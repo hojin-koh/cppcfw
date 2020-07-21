@@ -28,6 +28,12 @@ namespace cppcfwv0 {
     template <typename... Args> PImpl(Args&& ...);
     ~PImpl();
 
+    // Copy/Move
+    PImpl(PImpl&& rhs) noexcept;
+    PImpl& operator=(PImpl&& rhs) noexcept;
+    PImpl(const PImpl& rhs);
+    PImpl& operator=(const PImpl& rhs);
+
     // Overloadings to get the actual underlying implementation object
     T* operator->();
     const T* operator->() const;
