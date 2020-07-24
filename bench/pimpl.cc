@@ -7,16 +7,10 @@
 #include <map>
 
 namespace bench_pimpl {
-  struct NoPImpl {
-    // Just to do the same number of layers of indirections
-    struct Impl {
-      std::map<long, long> m;
-      Impl(long a) { m[a]=a+1; }
-      long get() { return m.begin()->first; }
-    };
-    Impl impl;
-    NoPImpl(long a) : impl(a) {}
-    long get() { return impl.get(); }
+  struct Direct {
+    Direct(long a) { m[a]=a+1; }
+    long get() { return m.begin()->first; }
+    std::map<long, long> m;
   };
 
   struct DynamicPImpl {
@@ -39,7 +33,7 @@ namespace bench_pimpl {
 
 
 BASELINE(PImpl, None, 2000, 0) {
-  bench_pimpl::NoPImpl obj(getInt());
+  bench_pimpl::Direct obj(getInt());
   celero::DoNotOptimizeAway(static_cast<long>(obj.get()));
 }
 
