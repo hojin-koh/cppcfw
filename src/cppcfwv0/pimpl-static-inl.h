@@ -40,33 +40,32 @@ namespace cppcfwv0 {
 
   // == Move and Copy ==
 
-  //template <class T>
-  //PImplS<T, SIZE, ALIGN>::PImplS(PImplS<T, SIZE, ALIGN>&& rhs) noexcept : m_ptr{rhs.m_ptr} {
-  //  rhs.m_ptr = nullptr;
-  //}
+  template <class T, int SIZE, int ALIGN>
+  PImplS<T, SIZE, ALIGN>::PImplS(PImplS<T, SIZE, ALIGN>&& rhs) noexcept {
+    ::new (m_data) T{std::move(*rhs)};
+  }
 
-  //template <class T>
-  //PImplS<T, SIZE, ALIGN>& PImplS<T, SIZE, ALIGN>::operator=(PImplS<T, SIZE, ALIGN>&& rhs) noexcept {
-  //  if (m_ptr != rhs.m_ptr) {
-  //    if (m_ptr) delete m_ptr;
-  //    m_ptr = rhs.m_ptr;
-  //    rhs.m_ptr = nullptr;
-  //  }
+  template <class T, int SIZE, int ALIGN>
+  PImplS<T, SIZE, ALIGN>& PImplS<T, SIZE, ALIGN>::operator=(PImplS<T, SIZE, ALIGN>&& rhs) noexcept {
+    if (m_data != rhs.m_data) {
+      **this = std::move(*rhs);
+    }
+    return *this;
+  }
 
-  //  return *this;
-  //}
+  template <class T, int SIZE, int ALIGN>
+  PImplS<T, SIZE, ALIGN>::PImplS(const PImplS<T, SIZE, ALIGN>& rhs) {
+    ::new (m_data) T{*rhs};
+  }
 
-  //template <class T>
-  //PImplS<T, SIZE, ALIGN>::PImplS(const PImplS<T, SIZE, ALIGN>& rhs) : m_ptr{new T{*rhs.m_ptr}} {}
+  template <class T, int SIZE, int ALIGN>
+  PImplS<T, SIZE, ALIGN>& PImplS<T, SIZE, ALIGN>::operator=(const PImplS<T, SIZE, ALIGN>& rhs) {
+    if (m_data != rhs.m_data) {
+      **this = *rhs;
+    }
+    return *this;
+  }
 
-  //template <class T>
-  //PImplS<T, SIZE, ALIGN>& PImplS<T, SIZE, ALIGN>::operator=(const PImplS<T, SIZE, ALIGN>& rhs) {
-  //  if (m_ptr != rhs.m_ptr) {
-  //    if (m_ptr) delete m_ptr;
-  //    m_ptr = new T{*rhs.m_ptr};
-  //  }
-  //  return *this;
-  //}
 
   // == Underlying ==
 

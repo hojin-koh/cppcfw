@@ -24,11 +24,11 @@ namespace cppcfwv0 {
     template <typename... Args> PImplS(Args&& ...);
     ~PImplS();
 
-    // Copy/Move: not sure how to do these yet
-    // PImpl(PImpl&& rhs) noexcept;
-    // PImpl& operator=(PImpl&& rhs) noexcept;
-    // PImpl(const PImpl& rhs);
-    // PImpl& operator=(const PImpl& rhs);
+    // Copy/Move
+    PImplS(PImplS&& rhs) noexcept;
+    PImplS& operator=(PImplS&& rhs) noexcept;
+    PImplS(const PImplS& rhs);
+    PImplS& operator=(const PImplS& rhs);
 
     // Overloadings to get the actual underlying implementation object
     T* operator->();
@@ -37,7 +37,7 @@ namespace cppcfwv0 {
     const T& operator*() const;
   private:
     alignas(ALIGN) char m_data[SIZE];
-  }; // end class PImpl
+  }; // end class PImplS
 
 }
 
