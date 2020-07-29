@@ -7,6 +7,7 @@
 #include <cppcfwv0/pimpl-static-inl.h>
 
 #include <map>
+#include <vector>
 
 namespace bench_pimpl {
   struct Direct {
@@ -56,20 +57,33 @@ namespace bench_pimpl {
 
 namespace {
   const int nSample = 2000;
-  const int nLoop = 2048;
+  const int nLoop = 4;
+  const int nObj = 512;
 }
 
 BASELINE(PImpl, None, nSample, nLoop) {
-  bench_pimpl::Direct obj(getInt());
-  celero::DoNotOptimizeAway(static_cast<long>(obj.get()));
+  std::vector<bench_pimpl::Direct> a;
+  a.reserve(nObj);
+  for (auto i=0; i<nObj; i++) {
+    celero::DoNotOptimizeAway(a.emplace_back(getInt()));
+    celero::DoNotOptimizeAway(static_cast<long>(a[i].get()));
+  }
 }
 
 BENCHMARK(PImpl, Dynamic, nSample, nLoop) {
-  bench_pimpl::DynamicPImpl obj(getInt());
-  celero::DoNotOptimizeAway(static_cast<long>(obj.get()));
+  std::vector<bench_pimpl::DynamicPImpl> a;
+  a.reserve(nObj);
+  for (auto i=0; i<nObj; i++) {
+    celero::DoNotOptimizeAway(a.emplace_back(getInt()));
+    celero::DoNotOptimizeAway(static_cast<long>(a[i].get()));
+  }
 }
 
 BENCHMARK(PImpl, Static, nSample, nLoop) {
-  bench_pimpl::StaticPImpl obj(getInt());
-  celero::DoNotOptimizeAway(static_cast<long>(obj.get()));
+  std::vector<bench_pimpl::StaticPImpl> a;
+  a.reserve(nObj);
+  for (auto i=0; i<nObj; i++) {
+    celero::DoNotOptimizeAway(a.emplace_back(getInt()));
+    celero::DoNotOptimizeAway(static_cast<long>(a[i].get()));
+  }
 }
