@@ -43,9 +43,7 @@ namespace cppcfwv0 {
   template <class T>
   PImpl<T>& PImpl<T>::operator=(PImpl<T>&& rhs) noexcept {
     if (m_ptr != rhs.m_ptr) {
-      if (m_ptr) delete m_ptr;
-      m_ptr = rhs.m_ptr;
-      rhs.m_ptr = nullptr;
+      *m_ptr = std::move(*rhs.m_ptr);
     }
 
     return *this;
@@ -57,8 +55,7 @@ namespace cppcfwv0 {
   template <class T>
   PImpl<T>& PImpl<T>::operator=(const PImpl<T>& rhs) {
     if (m_ptr != rhs.m_ptr) {
-      if (m_ptr) delete m_ptr;
-      m_ptr = new T{*rhs.m_ptr};
+      *m_ptr = *rhs.m_ptr;
     }
     return *this;
   }
