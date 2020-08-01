@@ -38,6 +38,15 @@ SCENARIO("Static pImpl object which can be copied or moved", "[pimpl]") {
     }
   } // end move test
 
+  GIVEN("Two objects that should be movable") {
+    TestCpMv obj1 {150}, obj2 {900};
+    THEN("std::swap works on them") {
+      std::swap(obj1, obj2);
+      REQUIRE(*obj1.getPtr() == 900);
+      REQUIRE(*obj2.getPtr() == 150);
+    }
+  } // end swap test
+
 } // end copy/move
 
 }
