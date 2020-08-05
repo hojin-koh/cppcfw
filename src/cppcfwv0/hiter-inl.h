@@ -19,7 +19,28 @@
 #include <cppcfwv0/hiter.h>
 #include <cppcfwv0/pimpl-static-inl.h>
 
+#include <stdexcept>
+#include <string>
+
 namespace cppcfwv0 {
+
+  namespace {
+    namespace sfinae {
+      template <typename T, typename = void>
+      struct can_increment : std::false_type {};
+      template <typename T>
+      struct can_increment<T, std::void_t<decltype(std::declval<T>()++)>> : std::true_type {};
+      template <typename T>
+      inline constexpr bool can_increment_v = can_increment<T>::value;
+
+      template <typename T, typename = void>
+      struct can_decrement : std::false_type {};
+      template <typename T>
+      struct can_decrement<T, std::void_t<decltype(std::declval<T>()--)>> : std::true_type {};
+      template <typename T>
+      inline constexpr bool can_decrement_v = can_decrement<T>::value;
+    }
+  }
 
   template <typename DerivedOuter, typename Derived, typename Itr>
   struct HIterImpl {
@@ -36,20 +57,32 @@ namespace cppcfwv0 {
     bool operator!=(const HIterImpl& rhs) const {
       return m_itr != rhs.m_itr;
     }
+
     HIterImpl& operator++() {
-      ++m_itr;
+      if constexpr (sfinae::can_increment_v<Itr>) {
+        ++m_itr;
+      } else {
+        throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
+      }
       return *this;
     }
+
     HIterImpl& operator--() {
-      --m_itr;
+      if constexpr (sfinae::can_decrement_v<Itr>) {
+        --m_itr;
+      } else {
+        throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support decrementing");
+      }
       return *this;
     }
+
     const value_type& operator*() const {
       return *m_itr;
     }
     value_type& operator*() {
       return *m_itr;
     }
+
     const value_type* operator->() const {
       return &(*m_itr);
     }
