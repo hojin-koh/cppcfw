@@ -46,6 +46,8 @@ namespace cppcfwv0 {
   struct HIterImpl {
     using iterator_type = Itr;
     using value_type = typename Itr::value_type;
+    using pointer = typename Itr::pointer;
+    using reference = typename Itr::reference;
 
     HIterImpl(const void *pItr) : m_itr{*static_cast<const Itr*>(pItr)} {}
     HIterImpl() {}
@@ -76,17 +78,17 @@ namespace cppcfwv0 {
       return *this;
     }
 
-    const value_type& operator*() const {
+    const reference operator*() const {
       return *m_itr;
     }
-    value_type& operator*() {
+    reference operator*() {
       return *m_itr;
     }
 
-    const value_type* operator->() const {
+    const pointer operator->() const {
       return &(*m_itr);
     }
-    value_type* operator->() {
+    pointer operator->() {
       return &(*m_itr);
     }
   protected:
