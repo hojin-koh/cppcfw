@@ -27,6 +27,16 @@ SCENARIO("1-direction iterator", "[hiter]") {
       REQUIRE(b == e);
     }
 
+    THEN("Post-fix increment also works") {
+      auto itr = s.begin(), itrEnd = s.end();
+      IterSListInt b {&itr}, e {&itrEnd};
+      for (; itr != itrEnd; itr++, b++) {
+        REQUIRE(*b == *itr);
+        REQUIRE(b != e);
+      }
+      REQUIRE(b == e);
+    }
+
     THEN("It should throw if attempted to decrement the iterator") {
       auto itr = s.begin();
       IterSListInt b {&itr};

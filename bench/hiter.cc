@@ -42,23 +42,22 @@ struct FixtureHIter : public celero::TestFixture {
 
 };
 
-BASELINE_F(HIter, Direct, FixtureHIter, 128, 8) {
+namespace {
+  const int nSample = 128;
+  const int nIteration = 8;
+}
+
+BASELINE_F(HIter, Direct, FixtureHIter, nSample, nIteration) {
   auto itrOrigB {this->aValue.begin()}, itrOrigE {this->aValue.end()};
   for (; itrOrigB != itrOrigE; itrOrigB++) {
     celero::DoNotOptimizeAway(static_cast<long>(*itrOrigB));
   }
 }
 
-BENCHMARK_F(HIter, HIter, FixtureHIter, 128, 8) {
+BENCHMARK_F(HIter, HIter, FixtureHIter, nSample, nIteration) {
   auto itrOrigB = this->aValue.begin(), itrOrigE = this->aValue.end();
   bench_hiter::IterVecLong itrB{&itrOrigB}, itrE{&itrOrigE};
   for (; itrB != itrE; ++itrB) {
     celero::DoNotOptimizeAway(static_cast<long>(*itrB));
   }
 }
-
-//BENCHMARK_F(FileWrite, fwrite_with_fflush, StdFileFixture, 30, 5000)
-//{
-//    fwrite(buffer.data(), sizeof(char), buffer.size() * sizeof(char), file);
-//      fflush(file);
-//}
