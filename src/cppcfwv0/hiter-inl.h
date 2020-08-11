@@ -44,73 +44,11 @@ namespace cppcfwv0 {
 
   template <typename DerivedOuter, typename Derived, typename Itr>
   struct HIterImpl {
-    using iterator_type = Itr;
-    using value_type = typename Itr::value_type;
-    using pointer = typename Itr::pointer;
-    using reference = typename Itr::reference;
+    Itr m_itr;
 
     HIterImpl(const void *pItr) : m_itr{*static_cast<const Itr*>(pItr)} {}
     HIterImpl() {}
     virtual ~HIterImpl() {}
-
-    bool operator==(const HIterImpl& rhs) const {
-      return m_itr == rhs.m_itr;
-    }
-    bool operator!=(const HIterImpl& rhs) const {
-      return m_itr != rhs.m_itr;
-    }
-
-    HIterImpl& operator++() {
-      if constexpr (sfinae::can_increment_v<Itr>) {
-        ++m_itr;
-      } else {
-        throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
-      }
-      return *this;
-    }
-
-    HIterImpl& operator++(int) {
-      if constexpr (sfinae::can_increment_v<Itr>) {
-        m_itr++;
-      } else {
-        throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
-      }
-      return *this;
-    }
-
-    HIterImpl& operator--() {
-      if constexpr (sfinae::can_decrement_v<Itr>) {
-        --m_itr;
-      } else {
-        throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support decrementing");
-      }
-      return *this;
-    }
-
-    HIterImpl& operator--(int) {
-      if constexpr (sfinae::can_decrement_v<Itr>) {
-        m_itr--;
-      } else {
-        throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support decrementing");
-      }
-      return *this;
-    }
-
-    const reference operator*() const {
-      return *m_itr;
-    }
-    reference operator*() {
-      return *m_itr;
-    }
-
-    const pointer operator->() const {
-      return &(*m_itr);
-    }
-    pointer operator->() {
-      return &(*m_itr);
-    }
-  protected:
-    iterator_type m_itr;
   };
 
 
@@ -125,56 +63,76 @@ namespace cppcfwv0 {
 
   template <class Derived, typename T>
   bool HIter<Derived,T>::operator==(const HIter& rhs) const {
-    return *pimpl == *rhs.pimpl;
+    return pimpl->m_itr == rhs.pimpl->m_itr;
   }
 
   template <class Derived, typename T>
   bool HIter<Derived,T>::operator!=(const HIter& rhs) const {
-    return *pimpl != *rhs.pimpl;
+    return pimpl->m_itr != rhs.pimpl->m_itr;
   }
 
   template <class Derived, typename T>
   HIter<Derived,T>& HIter<Derived,T>::operator++() {
-    ++(*pimpl);
+    using Itr = decltype(pimpl->m_itr);
+    if constexpr (sfinae::can_increment_v<Itr>) {
+      ++(pimpl->m_itr);
+    } else {
+      throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
+    }
     return *this;
   }
 
   template <class Derived, typename T>
   HIter<Derived,T>& HIter<Derived,T>::operator++(int) {
-    (*pimpl)++;
+    using Itr = decltype(pimpl->m_itr);
+    if constexpr (sfinae::can_increment_v<Itr>) {
+      (pimpl->m_itr)++;
+    } else {
+      throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
+    }
     return *this;
   }
 
   template <class Derived, typename T>
   HIter<Derived,T>& HIter<Derived,T>::operator--() {
-    --(*pimpl);
+    using Itr = decltype(pimpl->m_itr);
+    if constexpr (sfinae::can_decrement_v<Itr>) {
+      --(pimpl->m_itr);
+    } else {
+      throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
+    }
     return *this;
   }
 
   template <class Derived, typename T>
   HIter<Derived,T>& HIter<Derived,T>::operator--(int) {
-    (*pimpl)--;
+    using Itr = decltype(pimpl->m_itr);
+    if constexpr (sfinae::can_decrement_v<Itr>) {
+      (pimpl->m_itr)--;
+    } else {
+      throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
+    }
     return *this;
   }
 
   template <class Derived, typename T>
   const typename HIter<Derived,T>::value_type& HIter<Derived,T>::operator*() const {
-    return **pimpl;
+    return *(pimpl->m_itr);
   }
 
   template <class Derived, typename T>
   typename HIter<Derived,T>::value_type& HIter<Derived,T>::operator*() {
-    return **pimpl;
+    return *(pimpl->m_itr);
   }
 
   template <class Derived, typename T>
   const typename HIter<Derived,T>::value_type* HIter<Derived,T>::operator->() const {
-    return &**pimpl;
+    return &*(pimpl->m_itr);
   }
 
   template <class Derived, typename T>
   typename HIter<Derived,T>::value_type* HIter<Derived,T>::operator->() {
-    return &**pimpl;
+    return &*(pimpl->m_itr);
   }
 
 }
