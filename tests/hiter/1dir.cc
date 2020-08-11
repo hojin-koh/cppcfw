@@ -9,10 +9,13 @@ namespace test_hiter {
 
 SCENARIO("1-direction iterator", "[hiter]") {
 
-  THEN("It should be default-constructable") {
+  THEN("It should be default-constructable and copyable/movable") {
     IterSListInt empty;
+    IterSListInt empty2 {empty};
+    IterSListInt empty3 {std::move(empty2)};
+    empty2 = empty;
+    empty3 = std::move(empty);
   }
-
 
   GIVEN("Reading from iterators for forward_list<int>") {
     const std::forward_list<int> s {6, 4, 2};
@@ -27,7 +30,7 @@ SCENARIO("1-direction iterator", "[hiter]") {
       REQUIRE(b == e);
     }
 
-    THEN("Post-fix increment also works") {
+    THEN("Postfix increment also works") {
       auto itr = s.begin(), itrEnd = s.end();
       IterSListInt b {&itr}, e {&itrEnd};
       for (; itr != itrEnd; itr++, b++) {

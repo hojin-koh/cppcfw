@@ -8,11 +8,6 @@ namespace test_hiter {
 
 SCENARIO("const iterator", "[hiter]") {
 
-  THEN("It should be default-constructable") {
-    IterVecIntConst empty;
-  }
-
-
   GIVEN("Reading from iterators for vector<int>") {
     const std::vector<int> v {2, 5, 9};
 

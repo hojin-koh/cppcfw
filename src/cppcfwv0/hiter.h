@@ -26,6 +26,11 @@ namespace cppcfwv0 {
     HIter(const void* pItr);
     virtual ~HIter();
 
+    HIter(const HIter& rhs);
+    HIter(HIter&& rhs);
+    HIter& operator=(const HIter& rhs);
+    HIter& operator=(HIter&& rhs);
+
     using value_type = T;
     bool operator==(const HIter& rhs) const;
     bool operator!=(const HIter& rhs) const;
