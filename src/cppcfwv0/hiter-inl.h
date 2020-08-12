@@ -97,14 +97,15 @@ namespace cppcfwv0 {
   }
 
   template <class Derived, typename T>
-  HIter<Derived,T>& HIter<Derived,T>::operator++(int) {
+  HIter<Derived,T> HIter<Derived,T>::operator++(int) {
     using Itr = decltype(pimpl->m_itr);
+    auto itrTmp = *this;
     if constexpr (sfinae::can_increment_v<Itr>) {
       (pimpl->m_itr)++;
     } else {
       throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
     }
-    return *this;
+    return itrTmp;
   }
 
   template <class Derived, typename T>
@@ -113,20 +114,21 @@ namespace cppcfwv0 {
     if constexpr (sfinae::can_decrement_v<Itr>) {
       --(pimpl->m_itr);
     } else {
-      throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
+      throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support decrementing");
     }
     return *this;
   }
 
   template <class Derived, typename T>
-  HIter<Derived,T>& HIter<Derived,T>::operator--(int) {
+  HIter<Derived,T> HIter<Derived,T>::operator--(int) {
     using Itr = decltype(pimpl->m_itr);
+    auto itrTmp = *this;
     if constexpr (sfinae::can_decrement_v<Itr>) {
       (pimpl->m_itr)--;
     } else {
-      throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support incrementing");
+      throw std::domain_error(std::string("This iterator ") + typeid(Itr).name() + " does not support decrementing");
     }
-    return *this;
+    return itrTmp;
   }
 
   template <class Derived, typename T>

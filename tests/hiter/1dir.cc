@@ -46,6 +46,14 @@ SCENARIO("1-direction iterator", "[hiter]") {
       REQUIRE_THROWS_AS(--b, std::domain_error);
     }
 
+    THEN("It should have correct postfix and prefix increment behaviour") {
+      auto itr = s.begin();
+      IterSListInt b {&itr}, b0 {&itr};
+      REQUIRE(b++ == b0);
+      auto b1 {b};
+      REQUIRE(++b != b1);
+    }
+
   } // reading from forward_list
 
 } // end 1-dir iterator

@@ -35,9 +35,9 @@ namespace cppcfwv0 {
     bool operator==(const HIter& rhs) const;
     bool operator!=(const HIter& rhs) const;
     HIter& operator++();
-    HIter& operator++(int);
+    HIter operator++(int);
     HIter& operator--();
-    HIter& operator--(int);
+    HIter operator--(int);
 
     const value_type& operator*() const;
     value_type& operator*();
