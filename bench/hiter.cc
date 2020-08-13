@@ -54,10 +54,18 @@ BASELINE_F(HIter, Direct, FixtureHIter, nSample, nIteration) {
   }
 }
 
-BENCHMARK_F(HIter, HIter, FixtureHIter, nSample, nIteration) {
+BENCHMARK_F(HIter, HIterPre, FixtureHIter, nSample, nIteration) {
   auto itrOrigB = this->aValue.begin(), itrOrigE = this->aValue.end();
   bench_hiter::IterVecLong itrB{&itrOrigB}, itrE{&itrOrigE};
   for (; itrB != itrE; ++itrB) {
+    celero::DoNotOptimizeAway(static_cast<long>(*itrB));
+  }
+}
+
+BENCHMARK_F(HIter, HIterPost, FixtureHIter, nSample, nIteration) {
+  auto itrOrigB = this->aValue.begin(), itrOrigE = this->aValue.end();
+  bench_hiter::IterVecLong itrB{&itrOrigB}, itrE{&itrOrigE};
+  for (; itrB != itrE; itrB++) {
     celero::DoNotOptimizeAway(static_cast<long>(*itrB));
   }
 }
