@@ -66,13 +66,13 @@ namespace cppcfwv0 {
   HIter<Derived,T>::HIter(const HIter<Derived,T>& rhs) = default;
 
   template <class Derived, typename T>
-  HIter<Derived,T>::HIter(HIter<Derived,T>&& rhs) = default;
+  HIter<Derived,T>::HIter(HIter<Derived,T>&& rhs) noexcept = default;
 
   template <class Derived, typename T>
   HIter<Derived,T>& HIter<Derived,T>::operator=(const HIter<Derived,T>& rhs) = default;
 
   template <class Derived, typename T>
-  HIter<Derived,T>& HIter<Derived,T>::operator=(HIter<Derived,T>&& rhs) = default;
+  HIter<Derived,T>& HIter<Derived,T>::operator=(HIter<Derived,T>&& rhs) noexcept = default;
 
 
   template <class Derived, typename T>
