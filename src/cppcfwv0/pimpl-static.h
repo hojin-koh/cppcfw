@@ -20,7 +20,7 @@
 namespace cppcfwv0 {
 
   template <class T, int SIZE, int ALIGN = __STDCPP_DEFAULT_NEW_ALIGNMENT__>
-  struct PImplS {
+  struct PImplS final {
     template <typename... Args> PImplS(Args&& ...);
     ~PImplS();
 
@@ -35,6 +35,7 @@ namespace cppcfwv0 {
     const T* operator->() const;
     T& operator*();
     const T& operator*() const;
+
   private:
     alignas(ALIGN) char m_data[SIZE];
   }; // end class PImplS

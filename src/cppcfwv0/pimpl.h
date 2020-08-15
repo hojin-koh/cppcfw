@@ -20,11 +20,7 @@
 namespace cppcfwv0 {
 
   template <class T>
-  class PImpl {
-  private:
-    // Yes, horrible raw pointer in order not to include smart pointer headers here
-    T* m_ptr {nullptr};
-  public:
+  struct PImpl final {
     template <typename... Args> PImpl(Args&& ...);
     ~PImpl();
 
@@ -39,6 +35,10 @@ namespace cppcfwv0 {
     const T* operator->() const;
     T& operator*();
     const T& operator*() const;
+
+  private:
+    // Yes, horrible raw pointer in order not to include smart pointer headers here
+    T* m_ptr {nullptr};
   }; // end class PImpl
 
 }
