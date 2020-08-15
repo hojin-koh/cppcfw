@@ -48,7 +48,8 @@ namespace cppcfwv0 {
 
     HIterImpl(const void *pItr) : m_itr{*static_cast<const Itr*>(pItr)} {}
     HIterImpl() {}
-    virtual ~HIterImpl() {}
+  protected:
+    ~HIterImpl() {}
   };
 
 

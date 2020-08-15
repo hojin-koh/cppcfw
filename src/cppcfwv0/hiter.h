@@ -24,7 +24,7 @@ namespace cppcfwv0 {
   struct HIter {
     HIter();
     HIter(const void* pItr);
-    virtual ~HIter();
+    ~HIter();
 
     HIter(const HIter& rhs);
     HIter(HIter&& rhs) noexcept;
@@ -43,6 +43,7 @@ namespace cppcfwv0 {
     value_type& operator*();
     const value_type* operator->() const;
     value_type* operator->();
+
   protected:
     class Impl; PImplS<Impl, 16> pimpl;
   };
