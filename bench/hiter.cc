@@ -26,7 +26,6 @@ struct FixtureHIter : public celero::TestFixture {
 
   virtual std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override {
     std::vector<celero::TestFixture::ExperimentValue> problemSpace;
-    problemSpace.push_back(1024);
     problemSpace.push_back(524288);
     return problemSpace;
   }
