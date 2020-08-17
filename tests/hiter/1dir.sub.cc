@@ -4,10 +4,5 @@
 
 #include <forward_list>
 
-using test_hiter::IterSListInt;
-
-template class ::cppcfwv0::HIter<IterSListInt, int>;
-template <>
-struct cppcfwv0::HIter<IterSListInt, int>::Impl : public ::cppcfwv0::HIterImpl<IterSListInt, cppcfwv0::HIter<IterSListInt, int>::Impl, std::forward_list<int>::iterator> {
-  using HIterImpl::HIterImpl;
+CPPCFWV0_HITER_IMPL(test_hiter::IterSListInt, int, std::forward_list<int>::iterator) {
 };

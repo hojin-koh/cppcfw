@@ -4,10 +4,5 @@
 
 #include <vector>
 
-using test_hiter::IterVecInt;
-
-template class ::cppcfwv0::HIter<IterVecInt, int>;
-template <>
-struct cppcfwv0::HIter<IterVecInt, int>::Impl : public ::cppcfwv0::HIterImpl<IterVecInt, cppcfwv0::HIter<IterVecInt, int>::Impl, std::vector<int>::iterator> {
-  using HIterImpl::HIterImpl;
+CPPCFWV0_HITER_IMPL(test_hiter::IterVecInt, int, std::vector<int>::iterator) {
 };

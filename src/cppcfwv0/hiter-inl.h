@@ -48,7 +48,7 @@ namespace cppcfwv0 {
 
     HIterImpl(const void *pItr) : m_itr{*static_cast<const Itr*>(pItr)} {}
     HIterImpl() {}
-  protected:
+  protected: // To prevent polymorphic use
     ~HIterImpl() {}
   };
 
@@ -154,3 +154,7 @@ namespace cppcfwv0 {
 
 }
 
+#define CPPCFWV0_HITER_IMPL(classItr, typeValue, typeRealItr) \
+  template class ::cppcfwv0::HIter<classItr, typeValue>; \
+  template <> \
+  struct cppcfwv0::HIter<classItr, typeValue>::Impl : public ::cppcfwv0::HIterImpl<classItr, cppcfwv0::HIter<classItr, typeValue>::Impl, typeRealItr>

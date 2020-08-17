@@ -12,11 +12,8 @@ namespace bench_hiter {
   };
 }
 
-template <>
-struct cppcfwv0::HIter<bench_hiter::IterVecLong, long>::Impl : public ::cppcfwv0::HIterImpl<bench_hiter::IterVecLong, cppcfwv0::HIter<bench_hiter::IterVecLong, long>::Impl, std::vector<long>::iterator> {
-  using HIterImpl::HIterImpl;
+CPPCFWV0_HITER_IMPL(bench_hiter::IterVecLong, long, std::vector<long>::iterator) {
 };
-template class ::cppcfwv0::HIter<bench_hiter::IterVecLong, long>;
 
 
 struct FixtureHIter : public celero::TestFixture {
