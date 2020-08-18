@@ -45,7 +45,7 @@ namespace cppcfwv0 {
     value_type* operator->();
 
   protected:
-    class Impl; PImplS<Impl, 16> pimpl;
+    class Impl; PImplS<Impl, 32> pimpl;
   };
 
 }
