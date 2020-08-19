@@ -1,20 +1,9 @@
-#include <celero/Celero.h>
-#include "benchutils.h"
+#include "hiter.sub.h"
 
-#include <cppcfwv0/hiter.h>
-#include <cppcfwv0/hiter-inl.h>
+#include <celero/Celero.h>
+#include "../benchutils.h"
 
 #include <vector>
-
-namespace bench_hiter {
-  struct IterVecLong : public ::cppcfwv0::HIter<IterVecLong, long> {
-    using HIter::HIter;
-  };
-}
-
-CPPCFWV0_HITER_IMPL(bench_hiter::IterVecLong, long, std::vector<long>::iterator) {
-};
-
 
 struct FixtureHIter : public celero::TestFixture {
   using TestFixture::TestFixture;
