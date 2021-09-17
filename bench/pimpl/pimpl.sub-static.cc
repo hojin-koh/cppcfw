@@ -17,4 +17,4 @@ namespace bench_pimpl {
 
 }
 
-template class ::cppcfwv0::PImplS<::bench_pimpl::StaticPImpl::Impl, 96>;
+template class ::cppcfwv0::PImplS<::bench_pimpl::StaticPImpl::Impl, ::bench_pimpl::config::sizeMapLong>;

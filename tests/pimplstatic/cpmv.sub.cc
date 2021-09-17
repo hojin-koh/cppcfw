@@ -35,4 +35,4 @@ namespace test_pimpl_static {
 }
 
 // instantiate the template static PImpl class who wraps around our implementation class
-template class ::cppcfwv0::PImplS<::test_pimpl_static::TestCpMv::Impl, 48>;
+template class ::cppcfwv0::PImplS<::test_pimpl_static::TestCpMv::Impl, ::test_pimpl_static::config::sizeVectorInt>;

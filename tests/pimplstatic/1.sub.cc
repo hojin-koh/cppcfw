@@ -25,4 +25,4 @@ namespace test_pimpl_static {
 }
 
 // instantiate the template PImpl class who wraps around our implementation class
-template class ::cppcfwv0::PImplS<::test_pimpl_static::Test1::Impl, 8>;
+template class ::cppcfwv0::PImplS<::test_pimpl_static::Test1::Impl, sizeof(int)>;

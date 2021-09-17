@@ -32,5 +32,13 @@ FetchContent_Declare(Celero GIT_TAG v2.6.0 GIT_REPOSITORY https://github.com/Dig
 FetchContent_MakeAvailable(Celero)
 target_link_libraries(bench-program PRIVATE celero)
 
+## Do platform size check
+include(CheckTypeSize)
+set(CMAKE_EXTRA_INCLUDE_FILES map)
+check_type_size("std::map<long, long>" CPPCFW_BENCH___PIMPLS_SIZEOF___MAP LANGUAGE CXX)
+set(CMAKE_EXTRA_INCLUDE_FILES)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in include/config.h)
+target_include_directories(bench-program PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include)
+
 add_custom_target(run COMMAND $<TARGET_FILE:bench-program> DEPENDS bench-program)
 

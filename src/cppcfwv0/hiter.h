@@ -17,10 +17,11 @@
 // A "hidden iterator" wrapper for hiding the underlying containers
 #pragma once
 #include <cppcfwv0/pimpl-static.h>
+#include <cppcfwv0/config/config.h>
 
 namespace cppcfwv0 {
 
-  template <class Derived, typename T, int SIZE = 32>
+  template <class Derived, typename T, int SIZE = config::sizeIterator>
   struct HIter {
     HIter();
     HIter(const void* pItr);

@@ -18,6 +18,7 @@
 #pragma once
 #include <cppcfwv0/hiter.h>
 #include <cppcfwv0/pimpl.h>
+#include <cppcfwv0/config/config.h>
 
 namespace cppcfwv0 {
 
@@ -46,7 +47,7 @@ namespace cppcfwv0 {
     Reg(const Reg& rhs) = delete;
     Reg& operator=(const Reg& rhs) = delete;
   private:
-    class Impl; PImplS<Impl, 64> pimpl;
+    class Impl; PImplS<Impl, config::sizeReg> pimpl;
   }; // end Reg class
 
 }

@@ -1,0 +1,14 @@
+#pragma once
+// Config about data structure size
+
+@CPPCFW_BENCH___PIMPLS_SIZEOF___MAP_CODE@
+
+namespace bench_pimpl {
+  namespace config {
+    namespace {
+      constexpr decltype(sizeof(int)) sizeMapLong = CPPCFW_BENCH___PIMPLS_SIZEOF___MAP;
+    }
+  }
+}
+
+#undef CPPCFW_BENCH___PIMPLS_SIZEOF___MAP

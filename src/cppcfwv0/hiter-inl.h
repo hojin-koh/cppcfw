@@ -208,7 +208,7 @@ namespace cppcfwv0 {
   template <> \
   struct cppcfwv0::HIter<classItr, typeValue, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, cppcfwv0::HIter<classItr, typeValue, Size>::Impl, typeRealItr>
 
-#define CPPCFWV0_HITER_IMPL_3(classItr, typeValue, typeRealItr) CPPCFWV0_HITER_IMPL_4(classItr, typeValue, typeRealItr, 32)
+#define CPPCFWV0_HITER_IMPL_3(classItr, typeValue, typeRealItr) CPPCFWV0_HITER_IMPL_4(classItr, typeValue, typeRealItr, ::cppcfwv0::config::sizeIterator)
 
 #define CPPCFWV0_HITER_GET_5TH_ARG(arg1, arg2, arg3, arg4, arg5, ...) arg5
 
