@@ -18,6 +18,7 @@
 #pragma once
 #include <cppcfwv0/hiter.h>
 #include <cppcfwv0/pimpl-static-inl.h>
+#include <cppcfwv0/utils.h>
 
 #include <stdexcept>
 #include <string>
@@ -60,6 +61,8 @@ namespace cppcfwv0 {
       struct has_invalidateCache<T, std::void_t<decltype(std::declval<T>().invalidateCache())>> : std::true_type {};
       template <typename T>
       inline constexpr bool has_invalidateCache_v = has_invalidateCache<T>::value;
+
+      CPPCFWV0_SFINAE_VALID_EXP(hasCStr, std::declval<T>()->c_str());
     }
   }
 
@@ -88,13 +91,7 @@ namespace cppcfwv0 {
   HIter<Derived,T,SIZE>::HIter(const HIter<Derived,T,SIZE>& rhs) = default;
 
   template <class Derived, typename T, int SIZE>
-  HIter<Derived,T,SIZE>::HIter(HIter<Derived,T,SIZE>&& rhs) noexcept = default;
-
-  template <class Derived, typename T, int SIZE>
   HIter<Derived,T,SIZE>& HIter<Derived,T,SIZE>::operator=(const HIter<Derived,T,SIZE>& rhs) = default;
-
-  template <class Derived, typename T, int SIZE>
-  HIter<Derived,T,SIZE>& HIter<Derived,T,SIZE>::operator=(HIter<Derived,T,SIZE>&& rhs) noexcept = default;
 
 
   template <class Derived, typename T, int SIZE>

@@ -28,9 +28,7 @@ namespace cppcfwv0 {
     ~HIter();
 
     HIter(const HIter& rhs);
-    HIter(HIter&& rhs) noexcept;
     HIter& operator=(const HIter& rhs);
-    HIter& operator=(HIter&& rhs) noexcept;
 
     using value_type = T;
     bool operator==(const HIter& rhs) const;
