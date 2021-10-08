@@ -18,7 +18,7 @@
 #pragma once
 #include <cppcfwv0/hiter.h>
 #include <cppcfwv0/pimpl-static-inl.h>
-#include <cppcfwv0/utils.h>
+#include <cppcfwv0/sfinae.h>
 
 #include <stdexcept>
 #include <string>
@@ -27,19 +27,23 @@ namespace cppcfwv0 {
 
   namespace {
     namespace sfinae {
-      template <typename T, typename = void>
-      struct can_increment : std::false_type {};
-      template <typename T>
-      struct can_increment<T, std::void_t<decltype(std::declval<T>()++)>> : std::true_type {};
-      template <typename T>
-      inline constexpr bool can_increment_v = can_increment<T>::value;
+      CPPCFWV0_SFINAE_TYPE_TRAIT(canIncrement, std::declval<T>()++);
+      CPPCFWV0_SFINAE_TYPE_TRAIT(canDecrement, std::declval<T>()--);
 
-      template <typename T, typename = void>
-      struct can_decrement : std::false_type {};
-      template <typename T>
-      struct can_decrement<T, std::void_t<decltype(std::declval<T>()--)>> : std::true_type {};
-      template <typename T>
-      inline constexpr bool can_decrement_v = can_decrement<T>::value;
+      // Check type match against iterator output and our desired type
+      template <typename T, typename Itr>
+      inline constexpr bool canSupport_v = canCastInto_v<T, decltype(*std::declval<Itr>())>;
+      template <typename T, typename Itr>
+      inline constexpr bool canSupportFirst_v = canCastInto_v<T, decltype(std::declval<Itr>()->first)>;
+      template <typename T, typename Itr>
+      inline constexpr bool canSupportSecond_v = canCastInto_v<T, decltype(std::declval<Itr>()->second)>;
+
+      template <typename T, typename Itr>
+      inline constexpr bool canSupportPtr_v = canCastInto_v<T, decltype(&*std::declval<Itr>())>;
+      template <typename T, typename Itr>
+      inline constexpr bool canSupportPtrFirst_v = canCastInto_v<T, decltype(&(std::declval<Itr>()->first))>;
+      template <typename T, typename Itr>
+      inline constexpr bool canSupportPtrSecond_v = canCastInto_v<T, decltype(&(std::declval<Itr>()->second))>;
 
       template <typename T, typename = void>
       struct has_getPtr : std::false_type {};
@@ -61,8 +65,6 @@ namespace cppcfwv0 {
       struct has_invalidateCache<T, std::void_t<decltype(std::declval<T>().invalidateCache())>> : std::true_type {};
       template <typename T>
       inline constexpr bool has_invalidateCache_v = has_invalidateCache<T>::value;
-
-      CPPCFWV0_SFINAE_VALID_EXP(hasCStr, std::declval<T>()->c_str());
     }
   }
 
@@ -107,7 +109,7 @@ namespace cppcfwv0 {
   template <class Derived, typename T, int SIZE>
   HIter<Derived,T,SIZE>& HIter<Derived,T,SIZE>::operator++() {
     using Itr = decltype(pimpl->m_itr);
-    if constexpr (sfinae::can_increment_v<Itr>) {
+    if constexpr (sfinae::canIncrement_v<Itr>) {
       ++(pimpl->m_itr);
       if constexpr (sfinae::has_invalidateCache_v<HIter<Derived,T,SIZE>::Impl>) {
         pimpl->invalidateCache();
@@ -122,7 +124,7 @@ namespace cppcfwv0 {
   HIter<Derived,T,SIZE> HIter<Derived,T,SIZE>::operator++(int) {
     using Itr = decltype(pimpl->m_itr);
     auto itrTmp = *this;
-    if constexpr (sfinae::can_increment_v<Itr>) {
+    if constexpr (sfinae::canIncrement_v<Itr>) {
       (pimpl->m_itr)++;
       if constexpr (sfinae::has_invalidateCache_v<HIter<Derived,T,SIZE>::Impl>) {
         pimpl->invalidateCache();
@@ -136,7 +138,7 @@ namespace cppcfwv0 {
   template <class Derived, typename T, int SIZE>
   HIter<Derived,T,SIZE>& HIter<Derived,T,SIZE>::operator--() {
     using Itr = decltype(pimpl->m_itr);
-    if constexpr (sfinae::can_decrement_v<Itr>) {
+    if constexpr (sfinae::canDecrement_v<Itr>) {
       --(pimpl->m_itr);
       if constexpr (sfinae::has_invalidateCache_v<HIter<Derived,T,SIZE>::Impl>) {
         pimpl->invalidateCache();
@@ -151,7 +153,7 @@ namespace cppcfwv0 {
   HIter<Derived,T,SIZE> HIter<Derived,T,SIZE>::operator--(int) {
     using Itr = decltype(pimpl->m_itr);
     auto itrTmp = *this;
-    if constexpr (sfinae::can_decrement_v<Itr>) {
+    if constexpr (sfinae::canDecrement_v<Itr>) {
       (pimpl->m_itr)--;
       if constexpr (sfinae::has_invalidateCache_v<HIter<Derived,T,SIZE>::Impl>) {
         pimpl->invalidateCache();
@@ -164,37 +166,59 @@ namespace cppcfwv0 {
 
   template <class Derived, typename T, int SIZE>
   typename HIter<Derived,T,SIZE>::value_type const& HIter<Derived,T,SIZE>::operator*() const {
-    if constexpr (sfinae::has_getRef_v<HIter<Derived,T,SIZE>::Impl>) {
-      return pimpl->getRef();
-    } else {
+    using Itr = decltype(pimpl->m_itr);
+    if constexpr (sfinae::canSupport_v<value_type const&, Itr>) {
       return *(pimpl->m_itr);
+    } else if constexpr (sfinae::canSupportFirst_v<value_type const&, Itr>) {
+      return pimpl->m_itr->first;
+    } else if constexpr (sfinae::canSupportSecond_v<value_type const&, Itr>) {
+      return pimpl->m_itr->second;
+    } else {
+      static_assert(!sizeof(T), "... what kind of iterator does not support dereferencing?");
     }
   }
 
   template <class Derived, typename T, int SIZE>
   typename HIter<Derived,T,SIZE>::value_type& HIter<Derived,T,SIZE>::operator*() {
-    if constexpr (sfinae::has_getRef_v<HIter<Derived,T,SIZE>::Impl>) {
-      return pimpl->getRef();
-    } else {
+    using Itr = decltype(pimpl->m_itr);
+    if constexpr (sfinae::canSupport_v<value_type&, Itr>) {
       return *(pimpl->m_itr);
+    } else if constexpr (sfinae::canSupportFirst_v<value_type&, Itr>) {
+      return pimpl->m_itr->first;
+    } else if constexpr (sfinae::canSupportSecond_v<value_type&, Itr>) {
+      return pimpl->m_itr->second;
+    } else {
+      using namespace std::string_literals;
+      throw std::domain_error("This iterator "s + typeid(Itr).name() + " does not support non-const dereference");
     }
   }
 
   template <class Derived, typename T, int SIZE>
   typename HIter<Derived,T,SIZE>::value_type const* HIter<Derived,T,SIZE>::operator->() const {
-    if constexpr (sfinae::has_getPtr_v<HIter<Derived,T,SIZE>::Impl>) {
-      return pimpl->getPtr();
-    } else {
+    using Itr = decltype(pimpl->m_itr);
+    if constexpr (sfinae::canSupportPtr_v<value_type const*, Itr>) {
       return &*(pimpl->m_itr);
+    } else if constexpr (sfinae::canSupportPtrFirst_v<value_type const*, Itr>) {
+      return &pimpl->m_itr->first;
+    } else if constexpr (sfinae::canSupportPtrSecond_v<value_type const*, Itr>) {
+      return &pimpl->m_itr->second;
+    } else {
+      static_assert(!sizeof(T), "... what kind of iterator does not support dereferencing?");
     }
   }
 
   template <class Derived, typename T, int SIZE>
   typename HIter<Derived,T,SIZE>::value_type* HIter<Derived,T,SIZE>::operator->() {
-    if constexpr (sfinae::has_getPtr_v<HIter<Derived,T,SIZE>::Impl>) {
-      return pimpl->getPtr();
-    } else {
+    using Itr = decltype(pimpl->m_itr);
+    if constexpr (sfinae::canSupportPtr_v<value_type*, Itr>) {
       return &*(pimpl->m_itr);
+    } else if constexpr (sfinae::canSupportPtrFirst_v<value_type*, Itr>) {
+      return &pimpl->m_itr->first;
+    } else if constexpr (sfinae::canSupportPtrSecond_v<value_type*, Itr>) {
+      return &pimpl->m_itr->second;
+    } else {
+      using namespace std::string_literals;
+      throw std::domain_error("This iterator "s + typeid(Itr).name() + " does not support non-const dereference");
     }
   }
 

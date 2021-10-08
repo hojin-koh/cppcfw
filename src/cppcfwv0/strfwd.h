@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-// Some utilities
+// forward-decleration of std::string
 #pragma once
 
-#define CPPCFWV0_SFINAE_VALID_EXP(name, expr) \
-  template <typename T, typename = void> \
-  struct name : std::false_type {}; \
-  template <typename T> \
-  struct name<T, std::void_t<decltype(expr)>> : std::true_type {};
+#ifdef _LIBCPP_VERSION // clang/libc++
+  #include <iosfwd>
+#elif defined(__GLIBCXX__) // gcc/libstdc++
+  #include <bits/stringfwd.h>
+#else // sorry MSVC
+  #include <string>
+#endif
