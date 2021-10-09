@@ -4,8 +4,6 @@
 
 namespace test_hiter {
 
-  struct IterVecIntConst : public ::cppcfwv0::HIter<IterVecIntConst, const int> {
-    using HIter::HIter;
-  };
+  struct IterVecIntConst : public ::cppcfwv0::HIter<IterVecIntConst, const int> {};
 
 }

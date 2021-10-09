@@ -43,23 +43,4 @@ SCENARIO("string iterator", "[hiter]") {
 
 } // end string iterator
 
-SCENARIO("Indirect iterator", "[hiter]") {
-
-  GIVEN("From iterators for the first element of map<string, int>") {
-    const std::map<std::string, int> m {{"ABC", 15}, {"DEF", 35}};
-
-    THEN("It can read") {
-      auto itr = m.cbegin(), itrEnd = m.cend();
-      IterMapStr b {&itr}, e {&itrEnd};
-      for (; itr != itrEnd; ++itr, ++b) {
-        REQUIRE(itr->first == *b);
-        REQUIRE(b != e);
-      }
-      REQUIRE(b == e);
-    }
-
-  } // reading from vector
-
-} // end string iterator
-
 }

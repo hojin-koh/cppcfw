@@ -4,6 +4,4 @@
 
 #include <forward_list>
 
-CPPCFWV0_HITER_IMPL(test_hiter::IterSListInt, int, std::forward_list<int>::iterator) {
-  using HIterImpl::HIterImpl;
-};
+CPPCFWV0_HITER_IMPL(test_hiter::IterSListInt, int, std::forward_list<int>::iterator);

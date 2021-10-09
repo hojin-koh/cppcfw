@@ -4,8 +4,6 @@
 
 namespace test_hiter {
 
-  struct IterVecInt : public ::cppcfwv0::HIter<IterVecInt, int> {
-    using HIter::HIter;
-  };
+  struct IterVecInt : public ::cppcfwv0::HIter<IterVecInt, int> {};
 
 }

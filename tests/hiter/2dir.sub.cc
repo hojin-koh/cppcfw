@@ -4,6 +4,4 @@
 
 #include <vector>
 
-CPPCFWV0_HITER_IMPL(test_hiter::IterVecInt, int, std::vector<int>::iterator) {
-  using HIterImpl::HIterImpl;
-};
+CPPCFWV0_HITER_IMPL(test_hiter::IterVecInt, int, std::vector<int>::iterator);

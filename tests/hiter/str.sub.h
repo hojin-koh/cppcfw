@@ -5,12 +5,6 @@
 
 namespace test_hiter {
 
-  struct IterVecStr : public ::cppcfwv0::HIter<IterVecStr, std::string> {
-    using HIter::HIter;
-  };
-
-  struct IterMapStr : public ::cppcfwv0::HIter<IterMapStr, std::string> {
-    using HIter::HIter;
-  };
+  struct IterVecStr : public ::cppcfwv0::HIter<IterVecStr, std::string> {};
 
 }

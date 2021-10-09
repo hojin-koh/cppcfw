@@ -32,17 +32,3 @@
   struct name<T1, T, std::void_t<decltype((T1)expr)>> : std::true_type {}; \
   template <typename T1, typename T> \
   inline constexpr bool name ## _v = name<T1, T>::value;
-
-namespace cppcfwv0 {
-  namespace {
-    namespace sfinae {
-      // Check if the second type can be casted into the first one
-      template <typename T1, typename T2, typename = void> \
-      struct canCastInto : std::false_type {}; \
-      template <typename T1, typename T2> \
-      struct canCastInto<T1, T2, std::void_t<decltype(static_cast<T1>(std::declval<T2>()))>> : std::true_type {}; \
-      template <typename T1, typename T2> \
-      inline constexpr bool canCastInto_v = canCastInto<T1, T2>::value;
-    }
-  }
-}

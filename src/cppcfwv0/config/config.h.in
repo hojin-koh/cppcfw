@@ -2,18 +2,16 @@
 // Config about data structure size
 
 @CPPCFWV0___PIMPLS_SIZEOF___ITERATOR_CODE@
-@CPPCFWV0___PIMPLS_SIZEOF___LIST_STRING_CODE@
 @CPPCFWV0___PIMPLS_SIZEOF___MAP_PAIR_STRING_CODE@
 
 namespace cppcfwv0 {
   namespace config {
     namespace {
       constexpr decltype(sizeof(int)) sizeIterator = CPPCFWV0___PIMPLS_SIZEOF___ITERATOR;
-      constexpr decltype(sizeof(int)) sizeReg = CPPCFWV0___PIMPLS_SIZEOF___LIST_STRING + CPPCFWV0___PIMPLS_SIZEOF___MAP_PAIR_STRING;
+      constexpr decltype(sizeof(int)) sizeReg = CPPCFWV0___PIMPLS_SIZEOF___MAP_PAIR_STRING;
     }
   }
 }
 
 #undef CPPCFWV0___PIMPLS_SIZEOF___ITERATOR
-#undef CPPCFWV0___PIMPLS_SIZEOF___LIST_STRING
 #undef CPPCFWV0___PIMPLS_SIZEOF___MAP_PAIR_STRING
