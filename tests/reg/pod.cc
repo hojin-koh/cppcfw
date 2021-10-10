@@ -46,13 +46,13 @@ SCENARIO("Simple registry", "[reg]") {
     }
 
     THEN("We can iterate over registered name") {
-      auto itr = reg.begin();
-    //  const std::vector<std::string> aAnswer {"a15", "a40"};
-    //  int i=0;
-    //  for (const auto& name : reg) {
-    //    REQUIRE_THAT(name, Equals(aAnswer[i]));
-    //    ++i;
-    //  }
+      const std::vector<std::string> aAnswer {"a15", "a40"};
+      int i=0;
+      for (const auto& name : reg) {
+        REQUIRE_THAT(name.first, Equals(aAnswer[i]));
+        ++i;
+      }
+      REQUIRE(i==2);
     }
 
   } // end simple data

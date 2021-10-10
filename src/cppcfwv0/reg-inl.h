@@ -87,11 +87,11 @@ namespace cppcfwv0 {
     return Iter(&itr);
   }
 
-  //template <class Derived, typename T>
-  //const Iter Reg<Derived,T>::end() const {
-  //  auto itr = pimpl->m_aKey.end();
-  //  return Iter(&itr);
-  //}
+  template <class Derived, typename T>
+  const typename Reg<Derived,T>::Iter Reg<Derived,T>::end() const {
+    auto itr = pimpl->m_mData.end();
+    return Iter(&itr);
+  }
 
 }
 
@@ -100,7 +100,7 @@ namespace cppcfwv0 {
   using ContainerInner = std::map<std::string, std::pair<typeValue, std::string>>; \
   template struct cppcfwv0::Reg<classReg, typeValue>; \
   \
-  CPPCFWV0_HITER_IMPL(RegParent::Iter, const char*, ContainerInner::iterator); \
+  CPPCFWV0_HITER_IMPL(RegParent::Iter, ContainerInner::iterator::value_type, ContainerInner::iterator); \
   \
   template <> \
   struct RegParent::Impl : public ::cppcfwv0::RegImpl<classReg, RegParent::Impl, typeValue> {};

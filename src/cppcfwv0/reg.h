@@ -36,11 +36,12 @@ namespace cppcfwv0 {
     const T& get(const std::string& name) const;
     const char* getDesc(const std::string& name) const;
 
-    struct Iter : public ::cppcfwv0::HIter<Iter, const char*> {
-      //using HIter<Iter, const char*>::HIter;
+    using typeValueIter = std::pair<const std::string, std::pair<T, std::string>>;
+    struct Iter : public ::cppcfwv0::HIter<Iter, typeValueIter> {
+      using HIter<Iter, typeValueIter>::HIter;
     };
     const Iter begin() const;
-    //const Iter end() const;
+    const Iter end() const;
 
     Reg();
     ~Reg();
