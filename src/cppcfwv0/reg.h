@@ -18,11 +18,13 @@
 #pragma once
 #include <cppcfwv0/config/config.h>
 #include <cppcfwv0/pimpl-static.h>
+#include <cppcfwv0/hiter.h>
 
 #include <utility>
 #include <cppcfwv0/strfwd.h>
 
 namespace cppcfwv0 {
+
 
   // Basically a 3-element append-only const container
   template <class Derived, typename T>
@@ -34,8 +36,10 @@ namespace cppcfwv0 {
     const T& get(const std::string& name) const;
     const char* getDesc(const std::string& name) const;
 
-    //struct Iter;
-    //const Iter begin() const;
+    struct Iter : public ::cppcfwv0::HIter<Iter, const char*> {
+      //using HIter<Iter, const char*>::HIter;
+    };
+    const Iter begin() const;
     //const Iter end() const;
 
     Reg();

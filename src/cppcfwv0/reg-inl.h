@@ -21,7 +21,6 @@
 #include <cppcfwv0/pimpl-static-inl.h>
 
 #include <stdexcept>
-#include <cstring>
 #include <string>
 #include <map>
 
@@ -80,25 +79,18 @@ namespace cppcfwv0 {
     return pimpl->m_mData.at(name).second.c_str();
   }
 
-  //template <class Derived, typename T>
-  //struct Reg<Derived,T>::Iter : public ::cppcfwv0::HIter<int, std::pair<std::string, std::pair<T, std::string>>> {
-  //  //using HIter<int, std::pair<std::string, std::pair<T, std::string>>>::HIter;
-  //  Iter(const void* pItr) {
-
-  //  }
-  //};
 
 
-  //template <class Derived, typename T>
-  //const typename Reg<Derived,T>::Iter Reg<Derived,T>::begin() const {
-  //  auto itr = pimpl->m_mData.begin();
-  //  return Reg<Derived,T>::Iter(&itr);
-  //}
+  template <class Derived, typename T>
+  const typename Reg<Derived,T>::Iter Reg<Derived,T>::begin() const {
+    auto itr = pimpl->m_mData.begin();
+    return Iter(&itr);
+  }
 
   //template <class Derived, typename T>
-  //const typename Reg<Derived,T>::Iter Reg<Derived,T>::end() const {
-  //  auto itr = pimpl->m_mData.end();
-  //  return Reg<Derived,T>::Iter(&itr);
+  //const Iter Reg<Derived,T>::end() const {
+  //  auto itr = pimpl->m_aKey.end();
+  //  return Iter(&itr);
   //}
 
 }
@@ -108,7 +100,7 @@ namespace cppcfwv0 {
   using ContainerInner = std::map<std::string, std::pair<typeValue, std::string>>; \
   template struct cppcfwv0::Reg<classReg, typeValue>; \
   \
-  CPPCFWV0_HITER_IMPL(RegParent::Iter, ContainerInner::iterator::value_type, ContainerInner::iterator); \
+  CPPCFWV0_HITER_IMPL(RegParent::Iter, const char*, ContainerInner::iterator); \
   \
   template <> \
   struct RegParent::Impl : public ::cppcfwv0::RegImpl<classReg, RegParent::Impl, typeValue> {};

@@ -21,6 +21,13 @@
 
 namespace cppcfwv0 {
 
+  namespace {
+    struct StringWrapper {
+      void* m_pStr;
+
+    };
+  }
+
   template <class Derived, typename T, int SIZE = config::sizeIterator>
   struct HIter {
     HIter();
