@@ -1,8 +1,8 @@
 #include "0.sub.h"
 // Include the implementation part
-#include <cppcfwv0/pimpl-inl.h>
+#include <cppcfwv0/pimpl-static-inl.h>
 
-namespace test_pimpl {
+namespace test_pimpl_static {
 
   // Implement the inner class here
   class Test0::Impl {
@@ -31,5 +31,5 @@ namespace test_pimpl {
 
 }
 
-// instantiate the template PImpl class who wraps around our implementation class
-template class ::cppcfwv0::PImpl<::test_pimpl::Test0::Impl>;
+// instantiate the template PImplS class who wraps around our implementation class
+template class ::cppcfwv0::PImplS<::test_pimpl_static::Test0::Impl, sizeof(int)>;

@@ -138,16 +138,16 @@ namespace cppcfwv0 {
 
 }
 
-#define CPPCFWV0_HITER_IMPL_4(classItr, typeValue, typeRealItr, Size) \
-  template class ::cppcfwv0::HIter<classItr, typeValue, Size>; \
+#define CPPCFWV0_HITER_IMPL_3(classItr, typeRealItr, Size) \
+  template class ::cppcfwv0::HIter<classItr, typeRealItr::value_type, Size>; \
   template <> \
-  struct cppcfwv0::HIter<classItr, typeValue, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, cppcfwv0::HIter<classItr, typeValue, Size>::Impl, typeRealItr> {\
+  struct cppcfwv0::HIter<classItr, typeRealItr::value_type, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, cppcfwv0::HIter<classItr, typeRealItr::value_type, Size>::Impl, typeRealItr> {\
     using HIterImpl::HIterImpl; \
   };
 
-#define CPPCFWV0_HITER_IMPL_3(classItr, typeValue, typeRealItr) CPPCFWV0_HITER_IMPL_4(classItr, typeValue, typeRealItr, ::cppcfwv0::config::sizeIterator)
+#define CPPCFWV0_HITER_IMPL_2(classItr, typeRealItr) CPPCFWV0_HITER_IMPL_3(classItr, typeRealItr, ::cppcfwv0::config::sizeIterator)
 
-#define CPPCFWV0_HITER_GET_5TH_ARG(arg1, arg2, arg3, arg4, arg5, ...) arg5
+#define CPPCFWV0_HITER_GET_4TH_ARG(arg1, arg2, arg3, arg4, ...) arg4
 
-#define CPPCFWV0_HITER_IMPL_CHOOSER(...) CPPCFWV0_HITER_GET_5TH_ARG(__VA_ARGS__, CPPCFWV0_HITER_IMPL_4, CPPCFWV0_HITER_IMPL_3)
+#define CPPCFWV0_HITER_IMPL_CHOOSER(...) CPPCFWV0_HITER_GET_4TH_ARG(__VA_ARGS__, CPPCFWV0_HITER_IMPL_3, CPPCFWV0_HITER_IMPL_2)
 #define CPPCFWV0_HITER_IMPL(...) CPPCFWV0_HITER_IMPL_CHOOSER(__VA_ARGS__)(__VA_ARGS__)

@@ -4,13 +4,13 @@
 
 namespace test_pimpl_static {
 
-  class Test1 {
+  class Test2 {
   private:
     // This is the intended usage in the header file
-    class Impl; cppcfwv0::PImplS<Impl, sizeof(int)> pimpl;
+    class Impl; cppcfwv0::PImplS<Impl, sizeof(int)*2> pimpl;
   public:
-    Test1(int a);
-    ~Test1();
+    Test2(int a, int b);
+    ~Test2();
     int run();
   };
 

@@ -1,13 +1,14 @@
 #pragma once
 // Include the header part
-#include <cppcfwv0/pimpl.h>
+#include "config.h"
+#include <cppcfwv0/pimpl-static.h>
 
-namespace test_pimpl {
+namespace test_pimpl_static {
 
   class Test0 {
   private:
     // This is the intended usage in the header file
-    class Impl; cppcfwv0::PImpl<Impl> pimpl;
+    class Impl; cppcfwv0::PImplS<Impl, sizeof(int)> pimpl;
   public:
     Test0();
     ~Test0();

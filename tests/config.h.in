@@ -1,14 +1,10 @@
 #pragma once
 // Config about data structure size
 
-@CPPCFW_TEST___PIMPLS_SIZEOF___VECTOR_INT_CODE@
+@CPPCFW_TEST___SIZEOF___VECTOR_INT_CODE@
 
-namespace test_pimpl_static {
-  namespace config {
-    namespace {
-      constexpr decltype(sizeof(int)) sizeVectorInt = CPPCFW_TEST___PIMPLS_SIZEOF___VECTOR_INT;
-    }
-  }
+namespace test_config {
+  constexpr decltype(sizeof(int)) sizeVectorInt = CPPCFW_TEST___SIZEOF___VECTOR_INT;
 }
 
-#undef CPPCFW_TEST___PIMPLS_SIZEOF___VECTOR_INT
+#undef CPPCFW_TEST___SIZEOF___VECTOR_INT

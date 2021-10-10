@@ -28,26 +28,37 @@ set(ALREADY_FORCED_COLORED_OUTPUT TRUE CACHE INTERNAL "ALREADY_FORCED_COLORED_OU
 
 ## Source file
 file(GLOB srcs LIST_DIRECTORIES true CONFIGURE_DEPENDS *.h *.cc */*.cc */*.h)
-#add_executable(test-program ${srcs} ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 add_executable(test-program ${srcs} )
 
 ## Link the original library
 add_subdirectory(.. orig)
 target_link_libraries(test-program PRIVATE cppcfwv0)
 
-## Link catch2
+## Link doctest
 include(FetchContent)
-FetchContent_Declare(Catch2 GIT_TAG v3.0.0-preview3 GIT_REPOSITORY https://github.com/catchorg/Catch2.git)
-FetchContent_MakeAvailable(Catch2)
-target_link_libraries(test-program PRIVATE Catch2::Catch2WithMain)
+FetchContent_Declare(doctest GIT_TAG 2.4.6 GIT_REPOSITORY https://github.com/onqtam/doctest.git)
+FetchContent_MakeAvailable(doctest)
+target_compile_features(test-program PRIVATE cxx_std_17) # Needed by doctest but actually dupllicated with orig
+target_compile_definitions(test-program PRIVATE DOCTEST_CONFIG_TREAT_CHAR_STAR_AS_STRING)
+target_compile_definitions(test-program PRIVATE DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
+target_compile_definitions(test-program PRIVATE DOCTEST_CONFIG_ASSERTION_PARAMETERS_BY_VALUE)
+target_compile_definitions(test-program PRIVATE DOCTEST_CONFIG_NO_WINDOWS_SEH)
+target_compile_definitions(test-program PRIVATE DOCTEST_CONFIG_NO_POSIX_SIGNALS)
+target_compile_definitions(test-program PRIVATE DOCTEST_CONFIG_INCLUDE_TYPE_TRAITS)
+target_link_libraries(test-program PRIVATE doctest::doctest)
+
+## Link rapidcheck
+FetchContent_Declare(rapidcheck GIT_TAG 57e9d30b15984ae2601749828243ebc426e0dca0 GIT_REPOSITORY https://github.com/emil-e/rapidcheck.git)
+FetchContent_MakeAvailable(rapidcheck)
+target_link_libraries(test-program PRIVATE rapidcheck)
 
 ## Do platform size check
 include(CheckTypeSize)
 set(CMAKE_EXTRA_INCLUDE_FILES vector)
-check_type_size("std::vector<int>" CPPCFW_TEST___PIMPLS_SIZEOF___VECTOR_INT LANGUAGE CXX)
+check_type_size("std::vector<int>" CPPCFW_TEST___SIZEOF___VECTOR_INT LANGUAGE CXX)
 set(CMAKE_EXTRA_INCLUDE_FILES)
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in include/config.h)
 target_include_directories(test-program PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include)
 
-add_custom_target(run COMMAND $<TARGET_FILE:test-program> --use-colour yes DEPENDS test-program)
+add_custom_target(run COMMAND ${CMAKE_COMMAND} -E env RC_PARAMS="max_size=1001 max_success=333" $<TARGET_FILE:test-program> -fc DEPENDS test-program)
 
