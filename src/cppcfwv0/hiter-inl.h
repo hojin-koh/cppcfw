@@ -139,6 +139,7 @@ namespace cppcfwv0 {
 }
 
 #define CPPCFWV0_HITER_IMPL_3(classItr, typeRealItr, Size) \
+  static_assert(std::is_same<typename classItr::value_type, typename typeRealItr::value_type>::value, "HIter type does not match the underlying iterator type"); \
   template class ::cppcfwv0::HIter<classItr, typeRealItr::value_type, Size>; \
   template <> \
   struct cppcfwv0::HIter<classItr, typeRealItr::value_type, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, cppcfwv0::HIter<classItr, typeRealItr::value_type, Size>::Impl, typeRealItr> {\

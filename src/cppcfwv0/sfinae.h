@@ -25,10 +25,11 @@
   template <typename T> \
   inline constexpr bool name ## _v = name<T>::value;
 
-#define CPPCFWV0_SFINAE_TYPE_MATCH(name, T1, expr) \
+#define CPPCFWV0_SFINAE_TYPE_MATCH(name, expr) \
   template <typename T1, typename T, typename = void> \
   struct name : std::false_type {}; \
   template <typename T1, typename T> \
   struct name<T1, T, std::void_t<decltype((T1)expr)>> : std::true_type {}; \
   template <typename T1, typename T> \
   inline constexpr bool name ## _v = name<T1, T>::value;
+
