@@ -50,7 +50,7 @@ namespace cppcfwv0 {
 
 
   template <class Derived, typename T>
-  void Reg<Derived,T>::add(const std::string& name, const T& obj, const std::string& desc) {
+  void Reg<Derived,T>::add(const char* name, const T& obj, const char* desc) {
     using namespace std::string_literals;
     if (pimpl->m_mData.count(name) > 0) {
       throw std::out_of_range("Key '"s + name + "' already exist when adding to registry");
@@ -59,7 +59,7 @@ namespace cppcfwv0 {
   }
 
   template <class Derived, typename T>
-  bool Reg<Derived,T>::has(const std::string& name) const {
+  bool Reg<Derived,T>::has(const char* name) const {
     return pimpl->m_mData.count(name) > 0;
   }
   
@@ -70,12 +70,12 @@ namespace cppcfwv0 {
 
 
   template <class Derived, typename T>
-  const T& Reg<Derived,T>::get(const std::string& name) const {
+  const T& Reg<Derived,T>::get(const char* name) const {
     return pimpl->m_mData.at(name).first;
   }
 
   template <class Derived, typename T>
-  const char* Reg<Derived,T>::getDesc(const std::string& name) const {
+  const char* Reg<Derived,T>::getDesc(const char* name) const {
     return pimpl->m_mData.at(name).second.c_str();
   }
 
@@ -100,7 +100,7 @@ namespace cppcfwv0 {
   using ContainerInner = std::map<std::string, std::pair<typeValue, std::string>>; \
   template struct cppcfwv0::Reg<classReg, typeValue>; \
   \
-  CPPCFWV0_HITER_IMPL(RegParent::Iter, ContainerInner::iterator::value_type, ContainerInner::iterator); \
+  CPPCFWV0_HITER_IMPL(RegParent::Iter, ContainerInner::iterator); \
   \
   template <> \
   struct RegParent::Impl : public ::cppcfwv0::RegImpl<classReg, RegParent::Impl, typeValue> {};

@@ -29,12 +29,12 @@ namespace cppcfwv0 {
   // Basically a 3-element append-only const container
   template <class Derived, typename T>
   struct Reg {
-    void add(const std::string& name, const T& obj, const std::string& desc = "");
-    bool has(const std::string& name) const;
+    void add(const char* name, const T& obj, const char* desc = "");
+    bool has(const char* name) const;
     decltype(sizeof(0)) size() const;
 
-    const T& get(const std::string& name) const;
-    const char* getDesc(const std::string& name) const;
+    const T& get(const char* name) const;
+    const char* getDesc(const char* name) const;
 
     using typeValueIter = std::pair<const std::string, std::pair<T, std::string>>;
     struct Iter : public ::cppcfwv0::HIter<Iter, typeValueIter> {
