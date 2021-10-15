@@ -48,6 +48,12 @@ namespace cppcfwv0 {
   template <class Derived, typename T>
   Reg<Derived,T>& Reg<Derived,T>::operator=(Reg<Derived,T>&& rhs) noexcept = default;
 
+  template <class Derived, typename T>
+  Reg<Derived,T>::Reg(const Reg<Derived,T>& rhs) = default;
+
+  template <class Derived, typename T>
+  Reg<Derived,T>& Reg<Derived,T>::operator=(const Reg<Derived,T>& rhs) = default;
+
 
   template <class Derived, typename T>
   void Reg<Derived,T>::add(const char* name, const T& obj, const char* desc) {

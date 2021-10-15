@@ -47,9 +47,8 @@ namespace cppcfwv0 {
     ~Reg();
     Reg(Reg&& rhs) noexcept;
     Reg& operator=(Reg&& rhs) noexcept;
-    // No copy for registry class
-    Reg(const Reg& rhs) = delete;
-    Reg& operator=(const Reg& rhs) = delete;
+    Reg(const Reg& rhs);
+    Reg& operator=(const Reg& rhs);
   private:
     class Impl; PImplS<Impl, config::sizeReg> pimpl;
   }; // end Reg class
