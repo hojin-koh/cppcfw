@@ -36,7 +36,7 @@ target_link_libraries(test-program PRIVATE cppcfwv0)
 
 ## Link doctest
 include(FetchContent)
-FetchContent_Declare(doctest GIT_TAG 2.4.6 GIT_REPOSITORY https://github.com/onqtam/doctest.git)
+FetchContent_Declare(doctest GIT_TAG v2.4.8 GIT_REPOSITORY https://github.com/onqtam/doctest.git)
 FetchContent_MakeAvailable(doctest)
 target_compile_features(test-program PRIVATE cxx_std_17) # Needed by doctest but actually dupllicated with orig
 target_compile_definitions(test-program PRIVATE DOCTEST_CONFIG_TREAT_CHAR_STAR_AS_STRING)
@@ -48,7 +48,7 @@ target_compile_definitions(test-program PRIVATE DOCTEST_CONFIG_INCLUDE_TYPE_TRAI
 target_link_libraries(test-program PRIVATE doctest::doctest)
 
 ## Link rapidcheck
-FetchContent_Declare(rapidcheck GIT_TAG 57e9d30b15984ae2601749828243ebc426e0dca0 GIT_REPOSITORY https://github.com/emil-e/rapidcheck.git)
+FetchContent_Declare(rapidcheck GIT_TAG 8fafda42e732164db58003e542196e94a28481f9 GIT_REPOSITORY https://github.com/emil-e/rapidcheck.git)
 FetchContent_MakeAvailable(rapidcheck)
 target_link_libraries(test-program PRIVATE rapidcheck)
 
