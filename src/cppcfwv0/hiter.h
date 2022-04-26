@@ -15,12 +15,15 @@
  */
 
 // A "hidden iterator" wrapper for hiding the underlying containers
+// Const access and increment only
 #pragma once
 #include <cppcfwv0/pimpl-static.h>
 #include <cppcfwv0/config/config.h>
+#include <utility>
 
 namespace cppcfwv0 {
 
+  // The Derived parameter is to make each hidden iterator class different
   template <class Derived, typename T, int SIZE = config::sizeIterator>
   struct HIter {
     HIter();
@@ -35,13 +38,31 @@ namespace cppcfwv0 {
     bool operator!=(const HIter& rhs) const;
     HIter& operator++();
     HIter operator++(int);
-    HIter& operator--();
-    HIter operator--(int);
 
     value_type const& operator*() const;
-    value_type& operator*();
     value_type const* operator->() const;
-    value_type* operator->();
+
+  protected:
+    class Impl; PImplS<Impl, SIZE> pimpl;
+  };
+
+  // Special case for string -> const char* mapping
+  template <class Derived, int SIZE>
+  struct HIter <Derived, const char*, SIZE> {
+    HIter();
+    HIter(const void* pItr);
+    ~HIter();
+
+    HIter(const HIter& rhs);
+    HIter& operator=(const HIter& rhs);
+
+    using value_type = const char*;
+    bool operator==(const HIter& rhs) const;
+    bool operator!=(const HIter& rhs) const;
+    HIter& operator++();
+    HIter operator++(int);
+
+    const char* operator*() const;
 
   protected:
     class Impl; PImplS<Impl, SIZE> pimpl;
