@@ -21,7 +21,6 @@
 #include <cppcfwv0/hiter.h>
 
 #include <utility>
-#include <cppcfwv0/strfwd.h>
 
 namespace cppcfwv0 {
 
@@ -36,9 +35,8 @@ namespace cppcfwv0 {
     const T& get(const char* name) const;
     const char* getDesc(const char* name) const;
 
-    using typeValueIter = std::pair<const std::string, std::pair<T, std::string>>;
-    struct Iter : public ::cppcfwv0::HIter<Iter, typeValueIter> {
-      using HIter<Iter, typeValueIter>::HIter;
+    struct Iter : public ::cppcfwv0::HIter<Iter, const char*> {
+      using HIter<Iter, const char*>::HIter;
     };
     const Iter begin() const;
     const Iter end() const;

@@ -24,17 +24,23 @@ struct TypePair {
 #define TYPEPAIR_TEST \
   TypePair<std::map<std::string, std::pair<long, std::string>>, test_reg::RegPod>
 
-//TEST_CASE_TEMPLATE("Reg content test", T, TYPEPAIR_FORWARD) {
-//
-//  CHECK(rc::check("<"s + typeid(typename T::T2).name() + "> Forward prefix iteration",
-//    [](typename T::T1 data) {
-//      auto itr = data.begin(), itrEnd = data.end();
-//      typename T::T2 b {&itr}, e {&itrEnd};
-//      for (; itr != itrEnd; ++itr, ++b) { // Prefix operator
-//        RC_ASSERT(*b == *itr);
-//        RC_ASSERT(b != e);
-//      }
-//      RC_ASSERT(b == e);
-//  }));
-//
-//}
+TEST_CASE("Reg content test") {
+
+  using T1 = std::map<std::string, std::pair<long, std::string>>;
+  using T2 = test_reg::RegPod;
+  CHECK(rc::check("<"s + typeid(T2).name() + "> Forward prefix iteration",
+    [](T1 data) {
+      T2 reg;
+      for (const auto& d : data) {
+        reg.add(d.first.c_str(), d.second.first, d.second.second.c_str());
+      }
+      auto itr = data.begin(), itrEnd = data.end();
+      auto b {reg.begin()}, e{reg.end()};
+      for (; itr != itrEnd; ++itr, ++b) { // Prefix operator
+        RC_ASSERT(*b == itr->first);
+        RC_ASSERT(b != e);
+      }
+      RC_ASSERT(b == e);
+  }));
+
+}

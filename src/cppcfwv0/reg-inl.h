@@ -22,7 +22,9 @@
 
 #include <stdexcept>
 #include <string>
+using namespace std::string_literals;
 #include <map>
+
 
 namespace cppcfwv0 {
 
@@ -57,7 +59,6 @@ namespace cppcfwv0 {
 
   template <class Derived, typename T>
   void Reg<Derived,T>::add(const char* name, const T& obj, const char* desc) {
-    using namespace std::string_literals;
     if (pimpl->m_mData.count(name) > 0) {
       throw std::out_of_range("Key '"s + name + "' already exist when adding to registry");
     }
@@ -106,7 +107,7 @@ namespace cppcfwv0 {
   using ContainerInner = std::map<std::string, std::pair<typeValue, std::string>>; \
   template struct cppcfwv0::Reg<classReg, typeValue>; \
   \
-  CPPCFWV0_HITER_IMPL(RegParent::Iter, ContainerInner::iterator); \
+  CPPCFWV0_HITER_IMPL_STR(RegParent::Iter, ContainerInner::iterator); \
   \
   template <> \
   struct RegParent::Impl : public ::cppcfwv0::RegImpl<classReg, RegParent::Impl, typeValue> {};
