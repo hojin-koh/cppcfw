@@ -12,4 +12,7 @@ namespace test_hiter {
   struct IterSListStr : public ::cppcfwv0::HIter<IterSListStr, const char*> {
   };
 
+  struct IterMapStrInt : public ::cppcfwv0::HIter<IterMapStrInt, const char*> {
+  };
+
 }

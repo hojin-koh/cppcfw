@@ -50,3 +50,18 @@ TEST_CASE_TEMPLATE("HIter forward iteration", T, TYPEPAIR_FORWARD) {
       RC_ASSERT(b == e);
   }));
 }
+
+TEST_CASE("HIter with pair key specialization") {
+  using T1 = std::map<std::string, int>;
+  using T2 = test_hiter::IterMapStrInt;
+  CHECK(rc::check("<"s + typeid(T2).name() + "> Forward prefix iteration",
+    [](T1 data) {
+      auto itr = data.begin(), itrEnd = data.end();
+      T2 b {&itr}, e {&itrEnd};
+      for (; itr != itrEnd; ++itr, ++b) { // Prefix operator
+        RC_ASSERT(*b == itr->first);
+        RC_ASSERT(b != e);
+      }
+      RC_ASSERT(b == e);
+  }));
+}

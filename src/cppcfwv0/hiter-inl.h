@@ -18,11 +18,17 @@
 #pragma once
 #include <cppcfwv0/hiter.h>
 #include <cppcfwv0/pimpl-static-inl.h>
+#include <cppcfwv0/sfinae.h>
 
 #include <stdexcept>
 #include <string>
 
 namespace cppcfwv0 {
+
+  namespace sfinae {
+    CPPCFWV0_SFINAE_TYPE_TRAIT(hasFirst, std::declval<T>()->first);
+  }
+
 
   template <typename DerivedOuter, typename Derived, typename Itr>
   struct HIterImpl {
@@ -141,11 +147,14 @@ namespace cppcfwv0 {
 
   template <class Derived, int SIZE>
   const char* HIter<Derived,const char*,SIZE>::operator*() const {
-    return pimpl->m_itr->c_str();
+    if constexpr (sfinae::hasFirst_v<decltype(pimpl->m_itr)>) {
+      return pimpl->m_itr->first.c_str();
+    } else {
+      return pimpl->m_itr->c_str();
+    }
   }
 
 #define CPPCFWV0_HITER_IMPL_STR_SIZE(classItr, typeRealItr, Size) \
-  static_assert(std::is_same<std::string, typename typeRealItr::value_type>::value, "The string-specialized HIter can only be used with iterators with std::string element type"); \
   template class ::cppcfwv0::HIter<classItr, const char*, Size>; \
   template <> \
   struct cppcfwv0::HIter<classItr, const char*, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, cppcfwv0::HIter<classItr, const char*, Size>::Impl, typeRealItr> {\
