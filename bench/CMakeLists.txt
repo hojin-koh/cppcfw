@@ -28,7 +28,7 @@ target_link_libraries(bench-program PRIVATE cppcfwv0)
 ## Link Celero
 include(FetchContent)
 option(CELERO_COMPILE_DYNAMIC_LIBRARIES "" OFF)
-FetchContent_Declare(Celero GIT_TAG v2.6.0 GIT_REPOSITORY https://github.com/DigitalInBlue/Celero)
+FetchContent_Declare(Celero GIT_TAG v2.8.3 GIT_REPOSITORY https://github.com/DigitalInBlue/Celero)
 FetchContent_MakeAvailable(Celero)
 target_link_libraries(bench-program PRIVATE celero)
 
