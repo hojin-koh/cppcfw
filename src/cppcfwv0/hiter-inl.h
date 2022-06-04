@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021, Hojin Koh
+ * Copyright 2020-2022, Hojin Koh
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 #include <cppcfwv0/sfinae.h>
 
 #include <stdexcept>
-#include <string>
 
 namespace cppcfwv0 {
 
