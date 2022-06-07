@@ -16,9 +16,7 @@ namespace bench_pimpl {
 }
 
 namespace {
-  const int nSample = 2000;
-  const int nLoop = 4;
-  const int nObj = 512;
+  const int nObj = 8192;
 
   template <class Type>
   inline void runBenchPImpl() {
@@ -31,15 +29,15 @@ namespace {
   }
 }
 
-BASELINE(PImpl, None, nSample, nLoop) {
+BASELINE(PImpl, None, 0, 0) {
   runBenchPImpl<bench_pimpl::Direct>();
 }
 
-BENCHMARK(PImpl, Dynamic, nSample, nLoop) {
+BENCHMARK(PImpl, Dynamic, 0, 0) {
   runBenchPImpl<bench_pimpl::DynamicPImpl>();
 }
 
-BENCHMARK(PImpl, Static, nSample, nLoop) {
+BENCHMARK(PImpl, Static, 0, 0) {
   runBenchPImpl<bench_pimpl::StaticPImpl>();
 }
 
@@ -67,26 +65,26 @@ namespace {
   }
 }
 
-BASELINE(PImplCopy, None, nSample, nLoop) {
+BASELINE(PImplCopy, None, 0, 0) {
   runBenchPImplCopy<bench_pimpl::Direct>();
 }
 
-BENCHMARK(PImplCopy, Dynamic, nSample, nLoop) {
+BENCHMARK(PImplCopy, Dynamic, 0, 0) {
   runBenchPImplCopy<bench_pimpl::DynamicPImpl>();
 }
 
-BENCHMARK(PImplCopy, Static, nSample, nLoop) {
+BENCHMARK(PImplCopy, Static, 0, 0) {
   runBenchPImplCopy<bench_pimpl::StaticPImpl>();
 }
 
-BASELINE(PImplMove, None, nSample, nLoop) {
+BASELINE(PImplMove, None, 0, 0) {
   runBenchPImplMove<bench_pimpl::Direct>();
 }
 
-BENCHMARK(PImplMove, Dynamic, nSample, nLoop) {
+BENCHMARK(PImplMove, Dynamic, 0, 0) {
   runBenchPImplMove<bench_pimpl::DynamicPImpl>();
 }
 
-BENCHMARK(PImplMove, Static, nSample, nLoop) {
+BENCHMARK(PImplMove, Static, 0, 0) {
   runBenchPImplMove<bench_pimpl::StaticPImpl>();
 }

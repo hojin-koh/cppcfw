@@ -11,13 +11,10 @@ namespace test_hiter {
     std::pair<const int, int> const getValue() const;
   };
 
-  struct IterVecInt : public ::cppcfwv0::HIter<IterVecInt, int> {
-  };
+  struct IterVecInt : public ::cppcfwv0::HIter<IterVecInt, int> {};
 
-  struct IterSListStr : public ::cppcfwv0::HIter<IterSListStr, const char*> {
-  };
+  struct IterSListStr : public ::cppcfwv0::HIter<IterSListStr, const char*> {};
 
-  struct IterMapStrInt : public ::cppcfwv0::HIter<IterMapStrInt, const char*> {
-  };
+  struct IterMapStrInt : public ::cppcfwv0::HIter<IterMapStrInt, const char*> {};
 
 }

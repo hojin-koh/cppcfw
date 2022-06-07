@@ -14,21 +14,17 @@ struct FixtureHIter : public celero::TestFixture {
 
   std::vector<long> aValue;
   std::vector<std::string> aValueStr;
-  std::map<std::string, std::string> mValueStr;
 
   virtual std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override {
     std::vector<celero::TestFixture::ExperimentValue> problemSpace;
-    problemSpace.push_back(524288);
+    problemSpace.push_back(131072);
     return problemSpace;
   }
 
   void setUp(const celero::TestFixture::ExperimentValue& experimentValue) override {
     this->aValue.reserve(experimentValue.Value);
     std::generate_n(std::back_inserter(this->aValue), experimentValue.Value, getInt);
-    std::generate_n(std::back_inserter(this->aValueStr), experimentValue.Value/2, getStr);
-    for (const auto& s : this->aValueStr) {
-      mValueStr.insert(std::pair(s, s));
-    }
+    std::generate_n(std::back_inserter(this->aValueStr), experimentValue.Value, getStr);
   }
 
   void tearDown() override {
@@ -38,19 +34,15 @@ struct FixtureHIter : public celero::TestFixture {
 
 };
 
-namespace {
-  const int nSample = 128;
-  const int nIteration = 8;
-}
 
-BASELINE_F(HIter, Direct, FixtureHIter, nSample, nIteration) {
+BASELINE_F(HIter, Direct, FixtureHIter, 0, 0) {
   auto itrOrigB {this->aValue.begin()}, itrOrigE {this->aValue.end()};
-  for (; itrOrigB != itrOrigE; itrOrigB++) {
+  for (; itrOrigB != itrOrigE; ++itrOrigB) {
     celero::DoNotOptimizeAway(static_cast<long>(*itrOrigB));
   }
 }
 
-BENCHMARK_F(HIter, HIterPre, FixtureHIter, nSample, nIteration) {
+BENCHMARK_F(HIter, HIter, FixtureHIter, 0, 0) {
   auto itrOrigB = this->aValue.begin(), itrOrigE = this->aValue.end();
   bench_hiter::IterVecLong itrB{&itrOrigB}, itrE{&itrOrigE};
   for (; itrB != itrE; ++itrB) {
@@ -58,10 +50,10 @@ BENCHMARK_F(HIter, HIterPre, FixtureHIter, nSample, nIteration) {
   }
 }
 
-BENCHMARK_F(HIter, HIterPost, FixtureHIter, nSample, nIteration) {
+BENCHMARK_F(HIter, Indirect, FixtureHIter, 0, 0) {
   auto itrOrigB = this->aValue.begin(), itrOrigE = this->aValue.end();
-  bench_hiter::IterVecLong itrB{&itrOrigB}, itrE{&itrOrigE};
-  for (; itrB != itrE; itrB++) {
+  bench_hiter::IterVecLongIndir itrB{&itrOrigB}, itrE{&itrOrigE};
+  for (; itrB != itrE; ++itrB) {
     celero::DoNotOptimizeAway(static_cast<long>(*itrB));
   }
 }
@@ -69,14 +61,14 @@ BENCHMARK_F(HIter, HIterPost, FixtureHIter, nSample, nIteration) {
 
 // String
 
-BASELINE_F(HIterStr, Direct, FixtureHIter, nSample, nIteration) {
+BASELINE_F(HIterStr, Direct, FixtureHIter, 0, 0) {
   auto itrOrigB {this->aValueStr.begin()}, itrOrigE {this->aValueStr.end()};
-  for (; itrOrigB != itrOrigE; itrOrigB++) {
+  for (; itrOrigB != itrOrigE; ++itrOrigB) {
     celero::DoNotOptimizeAway(static_cast<const char*>(itrOrigB->c_str()));
   }
 }
 
-BENCHMARK_F(HIterStr, HIterPre, FixtureHIter, nSample, nIteration) {
+BENCHMARK_F(HIterStr, HIter, FixtureHIter, 0, 0) {
   auto itrOrigB = this->aValueStr.begin(), itrOrigE = this->aValueStr.end();
   bench_hiter::IterVecStr itrB{&itrOrigB}, itrE{&itrOrigE};
   for (; itrB != itrE; ++itrB) {
@@ -84,36 +76,10 @@ BENCHMARK_F(HIterStr, HIterPre, FixtureHIter, nSample, nIteration) {
   }
 }
 
-BENCHMARK_F(HIterStr, HIterPost, FixtureHIter, nSample, nIteration) {
+BENCHMARK_F(HIterStr, Indirect, FixtureHIter, 0, 0) {
   auto itrOrigB = this->aValueStr.begin(), itrOrigE = this->aValueStr.end();
-  bench_hiter::IterVecStr itrB{&itrOrigB}, itrE{&itrOrigE};
-  for (; itrB != itrE; itrB++) {
-    celero::DoNotOptimizeAway(static_cast<const char*>(*itrB));
-  }
-}
-
-
-// String pair (key only)
-
-BASELINE_F(HIterStrKey, Direct, FixtureHIter, nSample, nIteration) {
-  auto itrOrigB {this->mValueStr.begin()}, itrOrigE {this->mValueStr.end()};
-  for (; itrOrigB != itrOrigE; itrOrigB++) {
-    celero::DoNotOptimizeAway(static_cast<const char*>(itrOrigB->first.c_str()));
-  }
-}
-
-BENCHMARK_F(HIterStrKey, HIterPre, FixtureHIter, nSample, nIteration) {
-  auto itrOrigB = this->mValueStr.begin(), itrOrigE = this->mValueStr.end();
-  bench_hiter::IterMapStr itrB{&itrOrigB}, itrE{&itrOrigE};
+  bench_hiter::IterVecStrIndir itrB{&itrOrigB}, itrE{&itrOrigE};
   for (; itrB != itrE; ++itrB) {
-    celero::DoNotOptimizeAway(static_cast<const char*>(*itrB));
-  }
-}
-
-BENCHMARK_F(HIterStrKey, HIterPost, FixtureHIter, nSample, nIteration) {
-  auto itrOrigB = this->mValueStr.begin(), itrOrigE = this->mValueStr.end();
-  bench_hiter::IterMapStr itrB{&itrOrigB}, itrE{&itrOrigE};
-  for (; itrB != itrE; itrB++) {
     celero::DoNotOptimizeAway(static_cast<const char*>(*itrB));
   }
 }
