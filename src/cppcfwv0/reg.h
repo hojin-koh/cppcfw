@@ -28,12 +28,12 @@ namespace cppcfwv0 {
   // Basically a 3-element append-only const container
   template <class Derived, typename T>
   struct Reg {
-    void add(const char* name, const T& obj, const char* desc = "");
-    bool has(const char* name) const;
-    decltype(sizeof(0)) size() const;
-
-    const T& get(const char* name) const;
-    const char* getDesc(const char* name) const;
+    Reg();
+    ~Reg();
+    Reg(Reg&& rhs) noexcept;
+    Reg& operator=(Reg&& rhs) noexcept;
+    Reg(const Reg& rhs);
+    Reg& operator=(const Reg& rhs);
 
     using value_type = std::pair<const char*, std::pair<T*, const char*>>;
     struct Iter : public HIterBase<Iter, value_type> {
@@ -42,12 +42,13 @@ namespace cppcfwv0 {
     Iter begin() const;
     Iter end() const;
 
-    Reg();
-    ~Reg();
-    Reg(Reg&& rhs) noexcept;
-    Reg& operator=(Reg&& rhs) noexcept;
-    Reg(const Reg& rhs);
-    Reg& operator=(const Reg& rhs);
+    Iter add(const char* name, const T& obj, const char* desc = "");
+    bool has(const char* name) const;
+    decltype(sizeof(0)) size() const;
+
+    const T& get(const char* name) const;
+    const char* getDesc(const char* name) const;
+
   private:
     class Impl; PImplS<Impl, config::sizeReg> pimpl;
   }; // end Reg class

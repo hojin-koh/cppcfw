@@ -2,7 +2,6 @@
 // Include the header part
 #include <cppcfwv0/hiter.h>
 
-
 #include <utility>
 
 namespace test_hiter {

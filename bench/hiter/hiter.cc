@@ -1,6 +1,4 @@
 #include "hiter.sub.h"
-//#include "hiter-indir.sub.h"
-//#include "hiter-cached.sub.h"
 
 #include <celero/Celero.h>
 #include "../benchutils.h"

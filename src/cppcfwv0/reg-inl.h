@@ -58,11 +58,12 @@ namespace cppcfwv0 {
 
 
   template <class Derived, typename T>
-  void Reg<Derived,T>::add(const char* name, const T& obj, const char* desc) {
-    if (pimpl->m_mData.count(name) > 0) {
-      throw std::out_of_range("Key '"s + name + "' already exist when adding to registry");
-    }
-    pimpl->m_mData.insert({name, {obj, desc}});
+  typename Reg<Derived,T>::Iter Reg<Derived,T>::add(const char* name, const T& obj, const char* desc) {
+    //if (pimpl->m_mData.count(name) > 0) {
+    //  throw std::out_of_range("Key '"s + name + "' already exist when adding to registry");
+    //}
+    const auto itr = pimpl->m_mData.insert({name, {obj, desc}});
+    return Iter{&itr};
   }
 
   template <class Derived, typename T>
@@ -103,7 +104,7 @@ namespace cppcfwv0 {
   template <class Derived, typename T>
   typename Reg<Derived, T>::value_type const Reg<Derived, T>::Iter::getValue() const {
     const auto& itr {this->pimpl->m_itr};
-    return std::pair(itr->first.c_str(), std::pair(&itr->second.first, itr->second.second.c_str()));
+    return {itr->first.c_str(), {&itr->second.first, itr->second.second.c_str()}};
   }
 
 }
