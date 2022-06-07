@@ -6,8 +6,6 @@
 
 namespace test_reg {
 
-  struct RegPod : public ::cppcfwv0::Reg<RegPod, long> {
-    using Reg::Reg;
-  };
+  struct RegPod : public ::cppcfwv0::Reg<RegPod, long> {};
 
 }

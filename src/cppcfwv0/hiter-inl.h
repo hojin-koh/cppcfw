@@ -96,7 +96,7 @@ namespace cppcfwv0 {
 
   // First explicitly instantiate the main class, then instantiate the Impl class
 #define CPPCFWV0_HITERBASE_INST_SIZE(classItr, typeRealItr, Size) \
-  template class ::cppcfwv0::HIterBase<classItr, classItr::value_type, Size>; \
+  template struct ::cppcfwv0::HIterBase<classItr, classItr::value_type, Size>; \
   template <> \
   struct cppcfwv0::HIterBase<classItr, classItr::value_type, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, typeRealItr> {\
     using HIterImpl::HIterImpl; \

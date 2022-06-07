@@ -24,11 +24,11 @@ struct TypePair {
 #define TYPEPAIR_TEST \
   TypePair<std::map<std::string, std::pair<long, std::string>>, test_reg::RegPod>
 
-TEST_CASE("Reg content test") {
+TEST_CASE_TEMPLATE("Reg content test", T, TYPEPAIR_TEST) {
 
-  using T1 = std::map<std::string, std::pair<long, std::string>>;
-  using T2 = test_reg::RegPod;
-  CHECK(rc::check("<"s + typeid(T2).name() + "> Forward prefix iteration",
+  using T1 = typename T::T1;
+  using T2 = typename T::T2;
+  CHECK(rc::check("<"s + typeid(T2).name() + "> Registry test",
     [](T1 data) {
       T2 reg;
       for (const auto& d : data) {
@@ -36,8 +36,10 @@ TEST_CASE("Reg content test") {
       }
       auto itr = data.begin(), itrEnd = data.end();
       auto b {reg.begin()}, e{reg.end()};
-      for (; itr != itrEnd; ++itr, ++b) { // Prefix operator
-        RC_ASSERT(*b == itr->first);
+      for (; itr != itrEnd; ++itr, ++b) {
+        RC_ASSERT(b->first == itr->first);
+        RC_ASSERT(*b->second.first == itr->second.first);
+        RC_ASSERT(b->second.second == itr->second.second);
         RC_ASSERT(b != e);
       }
       RC_ASSERT(b == e);

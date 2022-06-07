@@ -2,4 +2,4 @@
 // Include the implementation part
 #include <cppcfwv0/reg-inl.h>
 
-CPPCFWV0_REG_IMPL(test_reg::RegPod, long);
+CPPCFWV0_REG_INST(test_reg::RegPod, long);

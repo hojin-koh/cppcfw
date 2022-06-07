@@ -28,7 +28,7 @@ using namespace std::string_literals;
 
 namespace cppcfwv0 {
 
-  template <typename DerivedOuter, typename Derived, typename T>
+  template <typename Parent, typename T>
   struct RegImpl {
     std::map<std::string, std::pair<T, std::string>> m_mData;
 
@@ -89,25 +89,29 @@ namespace cppcfwv0 {
 
 
   template <class Derived, typename T>
-  const typename Reg<Derived,T>::Iter Reg<Derived,T>::begin() const {
+  typename Reg<Derived,T>::Iter Reg<Derived,T>::begin() const {
     auto itr = pimpl->m_mData.begin();
-    return Iter(&itr);
+    return Iter{&itr};
   }
 
   template <class Derived, typename T>
-  const typename Reg<Derived,T>::Iter Reg<Derived,T>::end() const {
+  typename Reg<Derived,T>::Iter Reg<Derived,T>::end() const {
     auto itr = pimpl->m_mData.end();
-    return Iter(&itr);
+    return Iter{&itr};
+  }
+
+  template <class Derived, typename T>
+  typename Reg<Derived, T>::value_type const Reg<Derived, T>::Iter::getValue() const {
+    const auto& itr {this->pimpl->m_itr};
+    return std::pair(itr->first.c_str(), std::pair(&itr->second.first, itr->second.second.c_str()));
   }
 
 }
 
-#define CPPCFWV0_REG_IMPL(classReg, typeValue) \
+#define CPPCFWV0_REG_INST(classReg, typeValue) \
   using RegParent = cppcfwv0::Reg<classReg, typeValue>; \
   using ContainerInner = std::map<std::string, std::pair<typeValue, std::string>>; \
   template struct cppcfwv0::Reg<classReg, typeValue>; \
-  \
-  CPPCFWV0_HITER_IMPL_STR(RegParent::Iter, ContainerInner::iterator); \
-  \
   template <> \
-  struct RegParent::Impl : public ::cppcfwv0::RegImpl<classReg, RegParent::Impl, typeValue> {};
+  struct RegParent::Impl : public ::cppcfwv0::RegImpl<classReg, typeValue> {using RegImpl::RegImpl;}; \
+  CPPCFWV0_HITERBASE_INST(RegParent::Iter, ContainerInner::iterator);
