@@ -7,9 +7,19 @@
 #include <string>
 #include <map>
 
-CPPCFWV0_HITER_IMPL(test_hiter::IterVecInt, std::vector<int>::iterator);
+using MapFloat = std::map<float, float>;
+CPPCFWV0_HITERBASE_INST(test_hiter::IterMapFloat, MapFloat::iterator);
 
-CPPCFWV0_HITER_IMPL_STR(test_hiter::IterSListStr, std::forward_list<std::string>::iterator);
+namespace test_hiter {
+  std::pair<const int, int> const IterMapFloat::getValue() const {
+    const auto& itr {pimpl->m_itr};
+    return std::pair(itr->first, itr->second);
+  }
+}
+
+CPPCFWV0_HITER_INST(test_hiter::IterVecInt, std::vector<int>::iterator);
+
+CPPCFWV0_HITER_INST(test_hiter::IterSListStr, std::forward_list<std::string>::iterator);
 
 using MapStrInt = std::map<std::string, int>;
-CPPCFWV0_HITER_IMPL_STR(test_hiter::IterMapStrInt, MapStrInt::iterator);
+CPPCFWV0_HITER_INST(test_hiter::IterMapStrInt, MapStrInt::iterator);

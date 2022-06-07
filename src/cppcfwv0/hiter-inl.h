@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-// Implementation of the hidden iterator wrapper
+// Implementation of the input hidden iterator wrapper
 #pragma once
 #include <cppcfwv0/hiter.h>
 #include <cppcfwv0/pimpl-static-inl.h>
@@ -26,10 +26,10 @@ namespace cppcfwv0 {
 
   namespace sfinae {
     CPPCFWV0_SFINAE_TYPE_TRAIT(hasFirst, std::declval<T>()->first);
+    CPPCFWV0_SFINAE_TYPE_TRAIT(hasCStr, std::declval<T>()->c_str());
   }
 
-
-  template <typename DerivedOuter, typename Derived, typename Itr>
+  template <class Parent, typename Itr>
   struct HIterImpl {
     Itr m_itr;
 
@@ -39,127 +39,101 @@ namespace cppcfwv0 {
     ~HIterImpl() {}
   };
 
+  template <class Derived, typename T, int SIZE>
+  HIterBase<Derived,T,SIZE>::HIterBase() : pimpl{} {}
 
   template <class Derived, typename T, int SIZE>
-  HIter<Derived,T,SIZE>::HIter() : pimpl{} {}
+  HIterBase<Derived,T,SIZE>::HIterBase(const void *pItr) : pimpl{pItr} {}
 
   template <class Derived, typename T, int SIZE>
-  HIter<Derived,T,SIZE>::HIter(const void *pItr) : pimpl{pItr} {}
-
-  template <class Derived, typename T, int SIZE>
-  HIter<Derived,T,SIZE>::~HIter() {}
-
-
-  template <class Derived, typename T, int SIZE>
-  HIter<Derived,T,SIZE>::HIter(const HIter<Derived,T,SIZE>& rhs) = default;
-
-  template <class Derived, typename T, int SIZE>
-  HIter<Derived,T,SIZE>& HIter<Derived,T,SIZE>::operator=(const HIter<Derived,T,SIZE>& rhs) = default;
+  HIterBase<Derived,T,SIZE>::~HIterBase() {}
 
 
   template <class Derived, typename T, int SIZE>
-  bool HIter<Derived,T,SIZE>::operator==(const HIter& rhs) const {
+  HIterBase<Derived,T,SIZE>::HIterBase(const HIterBase<Derived,T,SIZE>& rhs) = default;
+
+  template <class Derived, typename T, int SIZE>
+  HIterBase<Derived,T,SIZE>& HIterBase<Derived,T,SIZE>::operator=(const HIterBase<Derived,T,SIZE>& rhs) = default;
+
+
+  template <class Derived, typename T, int SIZE>
+  bool HIterBase<Derived,T,SIZE>::operator==(const HIterBase& rhs) const {
     return pimpl->m_itr == rhs.pimpl->m_itr;
   }
 
   template <class Derived, typename T, int SIZE>
-  bool HIter<Derived,T,SIZE>::operator!=(const HIter& rhs) const {
+  bool HIterBase<Derived,T,SIZE>::operator!=(const HIterBase& rhs) const {
     return pimpl->m_itr != rhs.pimpl->m_itr;
   }
 
   template <class Derived, typename T, int SIZE>
-  HIter<Derived,T,SIZE>& HIter<Derived,T,SIZE>::operator++() {
+  HIterBase<Derived,T,SIZE>& HIterBase<Derived,T,SIZE>::operator++() {
     ++(pimpl->m_itr);
     return *this;
   }
 
   template <class Derived, typename T, int SIZE>
-  HIter<Derived,T,SIZE> HIter<Derived,T,SIZE>::operator++(int) {
+  HIterBase<Derived,T,SIZE> HIterBase<Derived,T,SIZE>::operator++(int) {
     auto itrTmp = *this;
     (pimpl->m_itr)++;
     return itrTmp;
   }
 
   template <class Derived, typename T, int SIZE>
-  typename HIter<Derived,T,SIZE>::value_type const& HIter<Derived,T,SIZE>::operator*() const {
-    return *(pimpl->m_itr);
+  T const HIterBase<Derived,T,SIZE>::operator*() const {
+    return static_cast<const Derived*>(this)->getValue();
   }
 
   template <class Derived, typename T, int SIZE>
-  typename HIter<Derived,T,SIZE>::value_type const* HIter<Derived,T,SIZE>::operator->() const {
-    return &*(pimpl->m_itr);
+  HIterValueWrapper<T> const HIterBase<Derived,T,SIZE>::operator->() const {
+    return HIterValueWrapper<T>(static_cast<const Derived*>(this)->getValue());
   }
 
-#define CPPCFWV0_HITER_IMPL_SIZE(classItr, typeRealItr, Size) \
-  static_assert(std::is_same<typename classItr::value_type, typename typeRealItr::value_type>::value, "HIter type does not match the underlying iterator type"); \
-  template class ::cppcfwv0::HIter<classItr, typeRealItr::value_type, Size>; \
+  template <class Derived, typename T, int SIZE>
+  T const HIterBase<Derived,T,SIZE>::getValue() const {
+    throw std::logic_error("Should not reach here. Please provide your own getValue() implementation or use the HIter variant.");
+  }
+
+  // First explicitly instantiate the main class, then instantiate the Impl class
+#define CPPCFWV0_HITERBASE_INST_SIZE(classItr, typeRealItr, Size) \
+  template class ::cppcfwv0::HIterBase<classItr, classItr::value_type, Size>; \
   template <> \
-  struct cppcfwv0::HIter<classItr, typeRealItr::value_type, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, cppcfwv0::HIter<classItr, typeRealItr::value_type, Size>::Impl, typeRealItr> {\
+  struct cppcfwv0::HIterBase<classItr, classItr::value_type, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, typeRealItr> {\
     using HIterImpl::HIterImpl; \
   };
 
-#define CPPCFWV0_HITER_IMPL(classItr, typeRealItr) CPPCFWV0_HITER_IMPL_SIZE(classItr, typeRealItr, ::cppcfwv0::config::sizeIterator)
+#define CPPCFWV0_HITERBASE_INST(classItr, typeRealItr) CPPCFWV0_HITERBASE_INST_SIZE(classItr, typeRealItr, ::cppcfwv0::config::sizeIterator)
 
 
-
-  // String-specilized version below
-
-  template <class Derived, int SIZE>
-  HIter<Derived,const char*,SIZE>::HIter() : pimpl{} {}
-
-  template <class Derived, int SIZE>
-  HIter<Derived,const char*,SIZE>::HIter(const void *pItr) : pimpl{pItr} {}
-
-  template <class Derived, int SIZE>
-  HIter<Derived,const char*,SIZE>::~HIter() {}
-
-
-  template <class Derived, int SIZE>
-  HIter<Derived,const char*,SIZE>::HIter(const HIter<Derived,const char*,SIZE>& rhs) = default;
-
-  template <class Derived, int SIZE>
-  HIter<Derived,const char*,SIZE>& HIter<Derived,const char*,SIZE>::operator=(const HIter<Derived,const char*,SIZE>& rhs) = default;
-
-
-  template <class Derived, int SIZE>
-  bool HIter<Derived,const char*,SIZE>::operator==(const HIter& rhs) const {
-    return pimpl->m_itr == rhs.pimpl->m_itr;
+  template <class Derived, typename T, int SIZE>
+  T const& HIter<Derived,T,SIZE>::operator*() const {
+    return *this->pimpl->m_itr;
   }
 
-  template <class Derived, int SIZE>
-  bool HIter<Derived,const char*,SIZE>::operator!=(const HIter& rhs) const {
-    return pimpl->m_itr != rhs.pimpl->m_itr;
-  }
-
-  template <class Derived, int SIZE>
-  HIter<Derived,const char*,SIZE>& HIter<Derived,const char*,SIZE>::operator++() {
-    ++(pimpl->m_itr);
-    return *this;
-  }
-
-  template <class Derived, int SIZE>
-  HIter<Derived,const char*,SIZE> HIter<Derived,const char*,SIZE>::operator++(int) {
-    auto itrTmp = *this;
-    (pimpl->m_itr)++;
-    return itrTmp;
+  template <class Derived, typename T, int SIZE>
+  T const* HIter<Derived,T,SIZE>::operator->() const {
+    return &(*this->pimpl->m_itr);
   }
 
   template <class Derived, int SIZE>
   const char* HIter<Derived,const char*,SIZE>::operator*() const {
-    if constexpr (sfinae::hasFirst_v<decltype(pimpl->m_itr)>) {
-      return pimpl->m_itr->first.c_str();
+    if constexpr (sfinae::hasFirst_v<decltype(this->pimpl->m_itr)>) {
+      return this->pimpl->m_itr->first.c_str();
+    } else if constexpr (sfinae::hasCStr_v<decltype(this->pimpl->m_itr)>) {
+      return this->pimpl->m_itr->c_str();
     } else {
-      return pimpl->m_itr->c_str();
+      return *this->pimpl->m_itr;
     }
   }
 
-#define CPPCFWV0_HITER_IMPL_STR_SIZE(classItr, typeRealItr, Size) \
-  template class ::cppcfwv0::HIter<classItr, const char*, Size>; \
+#define CPPCFWV0_HITER_INST_SIZE(classItr, typeRealItr, Size) \
+  template class ::cppcfwv0::HIter<classItr, classItr::value_type, Size>; \
+  template class ::cppcfwv0::HIterBase<classItr, classItr::value_type, Size>; \
   template <> \
-  struct cppcfwv0::HIter<classItr, const char*, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, cppcfwv0::HIter<classItr, const char*, Size>::Impl, typeRealItr> {\
+  struct cppcfwv0::HIterBase<classItr, classItr::value_type, Size>::Impl : public ::cppcfwv0::HIterImpl<classItr, typeRealItr> {\
     using HIterImpl::HIterImpl; \
   };
 
-#define CPPCFWV0_HITER_IMPL_STR(classItr, typeRealItr) CPPCFWV0_HITER_IMPL_STR_SIZE(classItr, typeRealItr, ::cppcfwv0::config::sizeIterator)
+#define CPPCFWV0_HITER_INST(classItr, typeRealItr) CPPCFWV0_HITER_INST_SIZE(classItr, typeRealItr, ::cppcfwv0::config::sizeIterator)
 
 } // end namespace cppcfwv0
