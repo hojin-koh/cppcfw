@@ -18,7 +18,6 @@
 #pragma once
 #include <cppcfwv0/pimpl-static.h>
 #include <cppcfwv0/config/config.h>
-#include <utility>
 
 namespace cppcfwv0 {
 
