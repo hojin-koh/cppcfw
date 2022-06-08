@@ -22,7 +22,7 @@ struct FixtureReg : public celero::TestFixture {
 
   virtual std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override {
     std::vector<celero::TestFixture::ExperimentValue> problemSpace;
-    problemSpace.push_back(32768);
+    problemSpace.push_back(8192);
     return problemSpace;
   }
 
@@ -47,7 +47,7 @@ struct FixtureReg : public celero::TestFixture {
 BASELINE_F(RegAdd, Ref, FixtureReg, 0, 0) {
   MapAns mBench;
   for (const auto& e : *pmAnswer) {
-    celero::DoNotOptimizeAway(mBench.insert({e.first.c_str(), {e.second.first, e.second.second.c_str()}}));
+    celero::DoNotOptimizeAway(mBench.insert({e.first, {e.second.first, e.second.second}}));
   }
 }
 
